@@ -19,7 +19,6 @@ namespace maelstrom {
 
         bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports);
         std::string get_current_date_time(date_time_format format);
-        void closer();
         bool motor_status(int port);
         bool battery();
         void motor_faults();

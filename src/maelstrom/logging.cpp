@@ -53,11 +53,6 @@ namespace maelstrom{
             return std::string(buffer);
         }
 
-
-        void closer(){
-            error_log_file.close();
-        }
-
         bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports){
             motor_ports.reserve(left_motor_ports.size() + right_motor_ports.size()); 
             motor_ports.insert(motor_ports.end(), left_motor_ports.begin(), left_motor_ports.end());
