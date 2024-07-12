@@ -17,6 +17,7 @@ namespace maelstrom {
             E_DATE_TIME_FILE_PATH_FORMAT
         } date_time_format;
 
+        extern bool faults[][5];
         bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports);
         std::string get_current_date_time(date_time_format format);
         bool motor_status(int port);

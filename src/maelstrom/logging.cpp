@@ -9,7 +9,7 @@
 #include <iterator>
 
 //puts it in the tempest namespace
-namespace maelstrom{
+namespace maelstrom {
     //makes a namespace called log
     namespace logging {
 
@@ -18,7 +18,13 @@ namespace maelstrom{
         std::fstream error_log_file;
         std::fstream data_log_file;
         std::vector<int> motor_ports;
-        
+        bool faults[][5] = { };
+        std::vector<std::pair<pros::motor_fault_e_t, std::string>> pros_motor_faults = {
+            {pros::E_MOTOR_FAULT_MOTOR_OVER_TEMP, " over temperature: "},
+            {pros::E_MOTOR_FAULT_DRIVER_FAULT, " driver fault (H-bridge fault): "},
+            {pros::E_MOTOR_FAULT_OVER_CURRENT, " over current: "},
+            {pros::E_MOTOR_FAULT_DRV_OVER_CURRENT, " H-bridge over current: "}
+        };
 
         std::string get_current_date_time(date_time_format format) {
             setenv("TZ", "ESTEDT", 1);
@@ -119,6 +125,24 @@ namespace maelstrom{
             return init_arr;
         }
 
+        void motor_fault_log (int port_index, uint32_t motor_fault) {
+            for (int i = 0; i < pros_motor_faults.size(); i++) {
+                if (motor_fault & pros_motor_faults[i].first) {
+                    if (!faults[port_index][i]){
+                        error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(port_index))) + pros_motor_faults[i].second + get_current_date_time(E_TIME) + "\n";
+                        faults[port_index][i] = true;
+                    }
+                }
+                else {
+                    if (faults[port_index][i]){
+                        error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(port_index))) + pros_motor_faults[i].second + "all clear: " + get_current_date_time(E_TIME) + "\n";
+                    }
+                    faults[port_index][i] = false;
+                }
+            }
+            
+        }
+
         bool motor_status(int port) {
             int temperature = pros::c::motor_get_current_draw(port);
             return !(temperature == PROS_ERR);
@@ -151,55 +175,7 @@ namespace maelstrom{
                         driver_start = true;
                     }
                     for (int i = 0; i < motor_ports.size(); i++){
-                        uint32_t motor_faults = pros::c::motor_get_faults(motor_ports.at(i));
-                        if (motor_faults & pros::E_MOTOR_FAULT_MOTOR_OVER_TEMP) {
-                            if (!faults[i][0]){
-                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " over temperature: " + get_current_date_time(E_TIME) + "\n";
-                                faults[i][0] = true;
-                            }
-                        }
-                        else {
-                            if (faults[i][0]){
-                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " over temperature all clear: " + get_current_date_time(E_TIME) + "\n";
-                            }
-                            faults[i][0] = false;
-                        }
-                        if (motor_faults & pros::E_MOTOR_FAULT_DRIVER_FAULT) {
-                            if (!faults[i][1]){
-                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " driver fault (H-bridge fault): " + get_current_date_time(E_TIME) + "\n";
-                                faults[i][1] = true;
-                            }
-                        }
-                        else {
-                            if (faults[i][1]){
-                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " driver fault (H-bridge fault) all clear: " + get_current_date_time(E_TIME) + "\n";
-                            }
-                            faults[i][1] = false;
-                        }
-                        if (motor_faults & pros::E_MOTOR_FAULT_OVER_CURRENT) {
-                            if (!faults[i][2]){
-                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " over current: " + get_current_date_time(E_TIME) + "\n";
-                                faults[i][2] = true;
-                            }
-                        }
-                        else {
-                            if (faults[i][2]){
-                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " over current all clear: " + get_current_date_time(E_TIME) + "\n";
-                            }
-                            faults[i][2] = false;
-                        }
-                        if (motor_faults & pros::E_MOTOR_FAULT_DRV_OVER_CURRENT) {
-                            if (!faults[i][3]){
-                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " H-bridge over current: " + get_current_date_time(E_TIME) + "\n";
-                                faults[i][3] = true;
-                            }
-                        }
-                        else {
-                            if (faults[i][3]){
-                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " H-bridge over current all clear: " + get_current_date_time(E_TIME) + "\n";
-                            }
-                            faults[i][3] = false;
-                        }
+                        motor_fault_log(i, pros::c::motor_get_faults(motor_ports.at(i)));
                         if (!(motor_status(motor_ports.at(i)))) {
                             if (!faults[i][4]){
                                 error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " disconnected: " + get_current_date_time(E_TIME) + "\n";
@@ -216,9 +192,6 @@ namespace maelstrom{
                     if (!(battery())) {
                         error_log_file << "Battery below 50%" + get_current_date_time(E_TIME) + "\n";
                     }
-                }
-                else{
-                    //nothing
                 }
                 pros::delay(500);
                 error_log_file.close();
