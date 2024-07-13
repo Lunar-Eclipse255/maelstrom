@@ -1,0 +1,3 @@
+include/liblvgl/**/*.h linguist-vendored
+include/pros/**/*.h linguist-vendored
+include/pros/**/*.hpp linguist-vendored
