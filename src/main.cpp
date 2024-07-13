@@ -92,11 +92,19 @@ void opcontrol() {
 	if (file_created[0]) {
         maelstrom::logging::task_complete("Auton", auton_complete);
     }
+	double x_pos = 0;
+	double y_pos = 0;
+	double theta_heading = 0;
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	pros::MotorGroup left_mg({left_motors.begin(), left_motors.end()}); // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup right_mg({right_motors.begin(), right_motors.end()});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
-
+	maelstrom::logging::set_robot_coords(x_pos, y_pos, theta_heading);
+	pros::Task coords_logging(maelstrom::logging::robot_coords_log);
 	while (true) {
+		x_pos = 0;
+		y_pos = 0;
+		theta_heading = 0;
+		maelstrom::logging::set_robot_coords(x_pos, y_pos, theta_heading);
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
 		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs
