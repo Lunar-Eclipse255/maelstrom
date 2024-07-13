@@ -1,5 +1,12 @@
 #include "main.h"
 
+
+std::vector<int> left_motors = {1, -2, 3};
+std::vector<int> right_motors = {-4, 5, -6};
+bool file_created[2];
+bool auton_complete = false;
+
+
 /**
  * A callback function for LLEMU's center button.
  *
@@ -25,8 +32,12 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
-
 	pros::lcd::register_btn1_cb(on_center_button);
+	
+	bool* temp = maelstrom::logging::init(true, true, left_motors, right_motors);
+    file_created[0] = temp[0];
+    file_created[1] = temp[1];
+    delete[] temp; 
 }
 
 /**
@@ -58,7 +69,11 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+	if (file_created[0]) {
+        pros::Task error_logger(maelstrom::logging::motor_faults);
+    }
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -74,10 +89,12 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	if (file_created[0]) {
+        maelstrom::logging::task_complete("Auton", auton_complete);
+    }
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::MotorGroup left_mg({1, -2, 3});    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
-	pros::MotorGroup right_mg({-4, 5, -6});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
-
+	pros::MotorGroup left_mg({left_motors.begin(), left_motors.end()}); // Creates a motor group with forwards ports 1 & 3 and reversed port 2
+	pros::MotorGroup right_mg({right_motors.begin(), right_motors.end()});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
 
 	while (true) {
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
@@ -91,4 +108,5 @@ void opcontrol() {
 		right_mg.move(dir + turn);                     // Sets right motor voltage
 		pros::delay(20);                               // Run for 20 ms then update
 	}
+	maelstrom::logging::task_complete("Driver", true);
 }

@@ -7,12 +7,14 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
-
+#include <thread>
 //puts it in the tempest namespace
 namespace maelstrom {
     //makes a namespace called log
     namespace logging {
-
+        const char* timezone = "ESTEDT";
+        std::vector<double> robot_coords_vector;
+        pros::mutex_t robot_coords_mutex;
         std::string data_log_filename;
         std::string error_log_filename;
         std::fstream error_log_file;
@@ -25,6 +27,11 @@ namespace maelstrom {
             {pros::E_MOTOR_FAULT_OVER_CURRENT, " over current: "},
             {pros::E_MOTOR_FAULT_DRV_OVER_CURRENT, " H-bridge over current: "}
         };
+
+        void set_timezone (const char* timezone_string) {
+            timezone = timezone_string;
+        }
+
 
         std::string get_current_date_time(date_time_format format) {
             setenv("TZ", "ESTEDT", 1);
@@ -198,6 +205,27 @@ namespace maelstrom {
             }
         }
 
+        void set_robot_coords(double x, double y, double theta) {
+            pros::c::mutex_take(robot_coords_mutex, TIMEOUT_MAX);
+            robot_coords_vector.push_back(x);
+            robot_coords_vector.push_back(y);
+            robot_coords_vector.push_back(theta);
+            pros::c::mutex_give(robot_coords_mutex);
+        }
+
+        void robot_coords_log() {
+            while (true) {
+                pros::c::mutex_take(robot_coords_mutex, TIMEOUT_MAX);
+                if (!robot_coords_vector.empty()) {
+                    std::fstream data_log_file;
+                    data_log_file.open(data_log_filename, std::ios::out);
+                    data_log_file << "x: " + std::to_string(robot_coords_vector.at(0)) + " y: " + std::to_string(robot_coords_vector.at(1))+  " theta: " + std::to_string(robot_coords_vector.at(2)) + get_current_date_time(E_TIME) + "\n";
+                    data_log_file.close();
+                }
+                pros::c::mutex_give(robot_coords_mutex);
+                pros::delay(500);
+            }
+        }
 
         void task_complete(std::string task_name, bool completion) {
             std::fstream error_log_file;
