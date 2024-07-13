@@ -1,6 +1,6 @@
 # maelstrom
 
-<img src="https://img.shields.io/badge/version-v0.1.1-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/version-v0.2.0-blue?style=for-the-badge">
 
 ### Intro
 maelstrom is a [PROS](https://pros.cs.purdue.edu/) library
