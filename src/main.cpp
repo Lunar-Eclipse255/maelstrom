@@ -70,7 +70,9 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+
 	if (file_created[0]) {
+		maelstrom::logging::write_to_file("Good Luck", maelstrom::logging::E_DATA_LOG, maelstrom::logging::E_TIME);
         pros::Task error_logger(maelstrom::logging::robot_faults_log);
     }
 }

@@ -62,6 +62,8 @@ namespace maelstrom {
                 case E_DATE_TIME_FILE_PATH_FORMAT:
                     std::strftime(buffer, 20, "%d-%m-%Y_%H-%M", tm_info);
                     break;
+                case E_NONE:
+                    break;
             }
             return std::string(buffer);
         }
@@ -155,11 +157,11 @@ namespace maelstrom {
             return !(temperature == PROS_ERR);
         }
 
-        bool battery(){
+        bool battery(void){
             return pros::battery::get_capacity()>50;
         }
 
-        void robot_faults_log() {
+        void robot_faults_log(void) {
             bool faults[motor_ports.size()][5];
             bool battery_low = false;
             bool auton_start = false;
@@ -197,7 +199,7 @@ namespace maelstrom {
                         }
                     }
                     if (!(battery())) {
-                        error_log_file << "Battery below 50%" + get_current_date_time(E_TIME) + "\n";
+                        error_log_file << "Battery below 50% " + get_current_date_time(E_TIME) + "\n";
                     }
                 }
                 pros::delay(500);
@@ -219,7 +221,7 @@ namespace maelstrom {
                 if (!robot_coords_vector.empty()) {
                     std::fstream data_log_file;
                     data_log_file.open(data_log_filename, std::ios::out);
-                    data_log_file << "x: " + std::to_string(robot_coords_vector.at(0)) + " y: " + std::to_string(robot_coords_vector.at(1))+  " theta: " + std::to_string(robot_coords_vector.at(2)) + get_current_date_time(E_TIME) + "\n";
+                    data_log_file << "x: " + std::to_string(robot_coords_vector.at(0)) + " y: " + std::to_string(robot_coords_vector.at(1))+  " theta: " + std::to_string(robot_coords_vector.at(2)) + " " + get_current_date_time(E_TIME) + "\n";
                     data_log_file.close();
                 }
                 pros::c::mutex_give(robot_coords_mutex);
@@ -227,14 +229,29 @@ namespace maelstrom {
             }
         }
 
+        void write_to_file(std::string message, log_file file, date_time_format date_time_enum) {
+            if (file == E_ERROR_LOG){
+                std::fstream error_log_file;
+                error_log_file.open(error_log_filename, std::ios::out);
+                error_log_file << message + " " + get_current_date_time(date_time_enum) + "\n";
+                error_log_file.close();
+            }
+            else{
+                std::fstream data_log_file;
+                data_log_file.open(data_log_filename, std::ios::out);
+                data_log_file << message + " " + get_current_date_time(date_time_enum) + "\n";
+                data_log_file.close();
+            }
+        }
+
         void task_complete(std::string task_name, bool completion) {
             std::fstream error_log_file;
             error_log_file.open(error_log_filename, std::ios::out);
             if (completion){
-                error_log_file << task_name + " Complete" + get_current_date_time(E_TIME) + "\n";
+                error_log_file << task_name + " Complete " + get_current_date_time(E_TIME) + "\n";
             }
             else{
-                error_log_file << task_name + " Incomplete" + get_current_date_time(E_TIME) + "\n";
+                error_log_file << task_name + " Incomplete " + get_current_date_time(E_TIME) + "\n";
             }
         }
     }
