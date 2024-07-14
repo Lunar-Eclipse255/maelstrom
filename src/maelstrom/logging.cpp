@@ -159,7 +159,7 @@ namespace maelstrom {
             return pros::battery::get_capacity()>50;
         }
 
-        void motor_faults() {
+        void robot_faults_log() {
             bool faults[motor_ports.size()][5];
             bool battery_low = false;
             bool auton_start = false;

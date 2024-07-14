@@ -21,7 +21,7 @@ namespace maelstrom {
         bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports);
         bool battery();
         std::string get_current_date_time(date_time_format format);
-        void motor_faults();
+        void robot_faults_log();
         bool motor_status(int port);
         void robot_coords_log();
         void set_robot_coords(double x, double y, double theta);

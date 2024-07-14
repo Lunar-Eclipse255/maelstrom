@@ -71,7 +71,7 @@ void competition_initialize() {}
  */
 void autonomous() {
 	if (file_created[0]) {
-        pros::Task error_logger(maelstrom::logging::motor_faults);
+        pros::Task error_logger(maelstrom::logging::robot_faults_log);
     }
 }
 
