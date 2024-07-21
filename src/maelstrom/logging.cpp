@@ -20,6 +20,7 @@ namespace maelstrom {
         std::fstream error_log_file;
         std::fstream data_log_file;
         std::vector<int> motor_ports;
+        static std::string base_path = "/usd/logs/";
         bool faults[][5] = { };
         std::vector<std::pair<pros::motor_fault_e_t, std::string>> pros_motor_faults = {
             {pros::E_MOTOR_FAULT_MOTOR_OVER_TEMP, " over temperature: "},
@@ -67,12 +68,23 @@ namespace maelstrom {
             }
             return std::string(buffer);
         }
+        bool create_dated_file_path(date_time_format format){
+            if (!init_arr[0] || !init_arr[1] || !folder_status){
+                return false;
+            }
+            base_path = base_path + get_current_date_time(format);
+            if (stat(base_path.c_str(), &sb) != 0) {
+                if (mkdir(base_path.c_str(), 0777) != 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports){
             motor_ports.reserve(left_motor_ports.size() + right_motor_ports.size()); 
             motor_ports.insert(motor_ports.end(), left_motor_ports.begin(), left_motor_ports.end());
             motor_ports.insert(motor_ports.end(), right_motor_ports.begin(), right_motor_ports.end());
-            std::string base_path = "/usd/logs/";
             struct stat sb;
             bool folder_status = true;
             std::string log_folder_path;
@@ -80,6 +92,9 @@ namespace maelstrom {
             init_arr[0] = run_error_log;
             init_arr[1] = run_data_log;
             if (run_error_log || run_data_log){
+                //init_arr[0] = create_dated_file_path(E_YEAR), init_arr[1] = init_arr[0], folder_status = init_arr[0]  
+                //init_arr[0] = create_dated_file_path(E_MONTH), init_arr[1] = init_arr[0], folder_status = init_arr[0]  
+                //init_arr[0] = create_dated_file_path(E_DAY), init_arr[1] = init_arr[0], folder_status = init_arr[0]            
                 std::string path_year = base_path + get_current_date_time(E_YEAR);
                 if (stat(path_year.c_str(), &sb) != 0) {
                     if (mkdir(path_year.c_str(), 0777) != 0) {
@@ -102,6 +117,7 @@ namespace maelstrom {
                         init_arr[0] = false, init_arr[1] = false, folder_status = false;
                     }
                 }
+                //std::string log_folder_path = base_path + "/" + get_current_date_time(E_DATE_TIME);
                 std::string log_folder_path = path_day + "/" + get_current_date_time(E_DATE_TIME);
                 if (mkdir(log_folder_path.c_str(), 0777) != 0) {
                     init_arr[0] = false, init_arr[1] = false, folder_status = false;
