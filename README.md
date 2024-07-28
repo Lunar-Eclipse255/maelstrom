@@ -2,7 +2,7 @@
 
 <img src="https://img.shields.io/badge/version-v0.3.0-blue?style=for-the-badge">
 
-###Currently a WiP: not fully functional at the moment
+### Currently a WiP: not fully functional at the moment
 ### Intro
 maelstrom is a [PROS](https://pros.cs.purdue.edu/) library
 
