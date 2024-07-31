@@ -82,7 +82,9 @@ namespace maelstrom {
             if (run_error_log || run_data_log){
                 std::string path_year = base_path + get_current_date_time(E_YEAR);
                 if (stat(path_year.c_str(), &sb) != 0) {
+                    printf("Path year: %s\n", path_year.c_str());
                     if (mkdir(path_year.c_str(), 0777) != 0) {
+                        printf("Path year: %i\n", 1);
                         init_arr[0] = false, init_arr[1] = false, folder_status = false;
                     }
                 }
