@@ -16,11 +16,11 @@ namespace maelstrom {
         std::vector<double> robot_coords_vector;
         pros::mutex_t robot_coords_mutex;
         std::string data_log_filename;
-        std::string error_log_filename;
+        static std::string error_log_filename;
         std::fstream error_log_file;
         std::fstream data_log_file;
         std::vector<int> motor_ports;
-        static std::string base_path = "/usd/logs/";
+        int battery_threshold;
         bool faults[][5] = { };
         std::vector<std::pair<pros::motor_fault_e_t, std::string>> pros_motor_faults = {
             {pros::E_MOTOR_FAULT_MOTOR_OVER_TEMP, " over temperature: "},
@@ -35,10 +35,9 @@ namespace maelstrom {
 
 
         std::string get_current_date_time(date_time_format format) {
-            setenv("TZ", "ESTEDT", 1);
-            tzset();
-            std::time_t now = std::time(nullptr);
-            std::tm* tm_info = std::localtime(&now);
+            auto now = std::chrono::system_clock::now();   // get current time
+            std::time_t now_time = std::chrono::system_clock::to_time_t(now);   // convert to std::time_t
+            std::tm* tm_info = std::localtime(&now_time);   // convert to std::tm
             char buffer[20];
 
             switch(format) {
@@ -68,84 +67,68 @@ namespace maelstrom {
             }
             return std::string(buffer);
         }
-        bool create_dated_file_path(date_time_format format){
-            if (!init_arr[0] || !init_arr[1] || !folder_status){
-                return false;
-            }
-            base_path = base_path + get_current_date_time(format);
-            if (stat(base_path.c_str(), &sb) != 0) {
-                if (mkdir(base_path.c_str(), 0777) != 0) {
-                    return false;
-                }
-            }
-            return true;
-        }
 
-        bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports){
+        bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_level){
             motor_ports.reserve(left_motor_ports.size() + right_motor_ports.size()); 
             motor_ports.insert(motor_ports.end(), left_motor_ports.begin(), left_motor_ports.end());
             motor_ports.insert(motor_ports.end(), right_motor_ports.begin(), right_motor_ports.end());
+            std::string base_path = "/usd/logs/";
+            battery_threshold = battery_level;
             struct stat sb;
-            bool folder_status = true;
             std::string log_folder_path;
             bool* init_arr = new bool[2];
             init_arr[0] = run_error_log;
             init_arr[1] = run_data_log;
-            if (run_error_log || run_data_log){
-                //init_arr[0] = create_dated_file_path(E_YEAR), init_arr[1] = init_arr[0], folder_status = init_arr[0]  
-                //init_arr[0] = create_dated_file_path(E_MONTH), init_arr[1] = init_arr[0], folder_status = init_arr[0]  
-                //init_arr[0] = create_dated_file_path(E_DAY), init_arr[1] = init_arr[0], folder_status = init_arr[0]            
-                std::string path_year = base_path + get_current_date_time(E_YEAR);
-                if (stat(path_year.c_str(), &sb) != 0) {
-                    if (mkdir(path_year.c_str(), 0777) != 0) {
-                        init_arr[0] = false, init_arr[1] = false, folder_status = false;
-                    }
-                }
-
-                // Create directory month
-                std::string path_month = path_year + "/" + get_current_date_time(E_MONTH);
-                if (stat(path_month.c_str(), &sb) != 0) {
-                    if (mkdir(path_month.c_str(), 0777) != 0) {
-                        init_arr[0] = false, init_arr[1] = false, folder_status = false;
-                    }
-                }
-
-                // Create directory day
-                std::string path_day = path_month + "/" + get_current_date_time(E_DAY);
-                if (stat(path_day.c_str(), &sb) != 0) {
-                    if (mkdir(path_day.c_str(), 0777) != 0) {
-                        init_arr[0] = false, init_arr[1] = false, folder_status = false;
-                    }
-                }
-                //std::string log_folder_path = base_path + "/" + get_current_date_time(E_DATE_TIME);
-                std::string log_folder_path = path_day + "/" + get_current_date_time(E_DATE_TIME);
-                if (mkdir(log_folder_path.c_str(), 0777) != 0) {
-                    init_arr[0] = false, init_arr[1] = false, folder_status = false;
-                }
+            std::ifstream run_num_file("/usd/logs/run_nums.txt");
+            std::string line;
+            std::string run_num;
+            int run_num_int;
+            while (std::getline(run_num_file, line)) {
+                run_num = line;
             }
-            if (run_error_log && folder_status) {
-                std::string error_log_filename = log_folder_path + std::string("/error_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
+            run_num_file.close();
+            run_num = run_num.substr(1);
+            run_num_int = std::stoi(run_num);
+            run_num_int++;
+            run_num = "R" + std::to_string(run_num_int) + "_";
+            if (run_error_log) {
+                error_log_filename = base_path + run_num + std::string("error_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
+                printf("Path error: %s\n", error_log_filename.c_str());
+                //std::string error_log_filename = log_folder_path + std::string("/error_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
                 std::fstream error_log_file;
                 error_log_file.open(error_log_filename, std::ios::out);
                 if (error_log_file.is_open()) {
+                    printf("Path error: %i\n", 1);
                     error_log_file << get_current_date_time(E_DATE_TIME) + "\n \n";
                     error_log_file.close();
                 }
                 else{
                     init_arr[0] = false;
+                    printf("Path error: %i\n", 0);
                 }
             }
-            if(run_data_log && folder_status) {
-                std::string data_log_filename = log_folder_path + std::string("/data_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
+            if(run_data_log) {
+                std::string data_log_filename = base_path + run_num +std::string("data_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
+                printf("Path log: %s\n", data_log_filename.c_str());
+                //std::string data_log_filename = log_folder_path + std::string("/data_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
                 std::fstream data_log_file;
                 data_log_file.open(data_log_filename, std::ios::out);
                 if (data_log_file.is_open()) {
+                    printf("Path log: %i\n", 1);
                     data_log_file << get_current_date_time(E_DATE_TIME) + "\n \n";
                     data_log_file.close();
                 }
                 else{
                     init_arr[1] = false;
+                    printf("Path log: %i\n", 0);
                 }
+            }
+            if (run_data_log || run_error_log) {
+                std::fstream run_num_file;
+                run_num_file.open("/usd/logs/run_nums.txt", std::ios::out);
+                printf("run_num %s\n", run_num.c_str());
+                run_num_file << "\n" + run_num;
+                run_num_file.close();
             }
             return init_arr;
         }
@@ -173,15 +156,16 @@ namespace maelstrom {
             return !(temperature == PROS_ERR);
         }
 
-        bool battery(void){
-            return pros::battery::get_capacity()>50;
+        bool battery(int threshold){
+            return pros::battery::get_capacity() > threshold;
         }
 
-        void robot_faults_log(void) {
+        void robot_faults_log() {
             bool faults[motor_ports.size()][5];
             bool battery_low = false;
             bool auton_start = false;
             bool driver_start = false;
+            bool battery_below_threshold = false;
             for (int i = 0; i < motor_ports.size(); ++i) {
                 for (int j = 0; j < 4; ++j) {
                     faults[i][j] = false;
@@ -189,14 +173,17 @@ namespace maelstrom {
             }
             while (true) {
                 std::fstream error_log_file;
-                error_log_file.open(error_log_filename, std::ios::out);
+                error_log_file.open(error_log_filename, std::ios::app);
+                printf("error error: %s\n", error_log_filename.c_str());
                 if (!pros::competition::is_disabled()){
                     if (pros::competition::is_autonomous() && !auton_start) {
+                        printf("auton: %i\n", 1);
                         error_log_file << "Auton: \n";
                         auton_start = true;
                     }
-                    else if (!driver_start){
+                    else if (!pros::competition::is_autonomous() && !driver_start){
                         error_log_file << "Driver: \n";
+                        printf("driver: %i\n", 1);
                         driver_start = true;
                     }
                     for (int i = 0; i < motor_ports.size(); i++){
@@ -214,8 +201,11 @@ namespace maelstrom {
                             faults[i][4] = false;
                         }
                     }
-                    if (!(battery())) {
-                        error_log_file << "Battery below 50% " + get_current_date_time(E_TIME) + "\n";
+                    if (!(battery(battery_threshold))) {
+                        if(!battery_below_threshold){
+                            error_log_file << "Battery below " + std::to_string(battery_threshold) + "% " + get_current_date_time(E_TIME) + "\n";
+                            battery_below_threshold = true;
+                        }
                     }
                 }
                 pros::delay(500);
@@ -236,7 +226,7 @@ namespace maelstrom {
                 pros::c::mutex_take(robot_coords_mutex, TIMEOUT_MAX);
                 if (!robot_coords_vector.empty()) {
                     std::fstream data_log_file;
-                    data_log_file.open(data_log_filename, std::ios::out);
+                    data_log_file.open(data_log_filename, std::ios::app);
                     data_log_file << "x: " + std::to_string(robot_coords_vector.at(0)) + " y: " + std::to_string(robot_coords_vector.at(1))+  " theta: " + std::to_string(robot_coords_vector.at(2)) + " " + get_current_date_time(E_TIME) + "\n";
                     data_log_file.close();
                 }
@@ -248,13 +238,13 @@ namespace maelstrom {
         void write_to_file(std::string message, log_file file, date_time_format date_time_enum) {
             if (file == E_ERROR_LOG){
                 std::fstream error_log_file;
-                error_log_file.open(error_log_filename, std::ios::out);
+                error_log_file.open(error_log_filename, std::ios::app);
                 error_log_file << message + " " + get_current_date_time(date_time_enum) + "\n";
                 error_log_file.close();
             }
             else{
                 std::fstream data_log_file;
-                data_log_file.open(data_log_filename, std::ios::out);
+                data_log_file.open(data_log_filename, std::ios::app);
                 data_log_file << message + " " + get_current_date_time(date_time_enum) + "\n";
                 data_log_file.close();
             }
@@ -262,7 +252,7 @@ namespace maelstrom {
 
         void task_complete(std::string task_name, bool completion) {
             std::fstream error_log_file;
-            error_log_file.open(error_log_filename, std::ios::out);
+            error_log_file.open(error_log_filename, std::ios::app);
             if (completion){
                 error_log_file << task_name + " Complete " + get_current_date_time(E_TIME) + "\n";
             }

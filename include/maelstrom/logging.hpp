@@ -25,10 +25,10 @@ namespace maelstrom {
         } log_file;
 
         extern bool faults[][5];
-        bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports);
-        bool battery(void);
+        bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
+        bool battery(int battery_threshold);
         std::string get_current_date_time(date_time_format format);
-        void robot_faults_log(void);
+        void robot_faults_log();
         bool motor_status(int port);
         void robot_coords_log(void);
         void set_robot_coords(double x, double y, double theta);

@@ -3,6 +3,7 @@
 
 std::vector<int> left_motors = {1, -2, 3};
 std::vector<int> right_motors = {-4, 5, -6};
+int battery_threshold = 50;
 bool file_created[2];
 bool auton_complete = false;
 
@@ -34,7 +35,7 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 	pros::lcd::register_btn1_cb(on_center_button);
 	
-	bool* temp = maelstrom::logging::init(true, true, left_motors, right_motors);
+	bool* temp = maelstrom::logging::init(true, true, left_motors, right_motors, 50);
     file_created[0] = temp[0];
     file_created[1] = temp[1];
     delete[] temp; 
