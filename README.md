@@ -15,7 +15,8 @@ maelstrom is a [PROS](https://pros.cs.purdue.edu/) library
 
 4. Apply the library to the project with `pros c apply maelstrom`
 
-7. Put `#include "maelstrom/api.hpp"` in your main.h
+5. Put `#include "maelstrom/api.hpp"` in your main.h
+
 
 ## Alternative instructions for installing maelstrom library
 
@@ -31,3 +32,19 @@ maelstrom is a [PROS](https://pros.cs.purdue.edu/) library
 5. Apply the library to the project with `pros c apply maelstrom`
 
 6. Put `#include "maelstrom/api.hpp"` in your main.h
+
+
+## Set-up
+
+1. From this Github repository download the folder called logs
+
+2. Put that folder in the root of the SD Card
+
+
+## Alternative set-up
+
+1. In the root of the SD Card make a folder called logs
+
+2. In the folder logs make a file called run_nums.txt
+
+3. On the first line of run_nums.txt write R0
