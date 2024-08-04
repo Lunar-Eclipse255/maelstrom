@@ -1,6 +1,6 @@
 # maelstrom
 
-<img src="https://img.shields.io/badge/version-v0.3.0-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/version-v0.4.1-blue?style=for-the-badge">
 
 ### Currently a WiP: not fully functional at the moment
 ### Intro
