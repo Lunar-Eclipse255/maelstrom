@@ -4,7 +4,7 @@
 
 ### Currently a WiP: The functions `maelstrom::logging::set_robot_coords()` and `maelstrom::logging::coords_logging()` don't currently work
 ### Intro
-maelstrom is a [PROS](https://pros.cs.purdue.edu/) library
+maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 
 ## Installing maelstrom library
 1. In the integrated PROS terminal, run the command `pros c add-depot maelstrom https://lunar-eclipse255.github.io/maelstrom/template.json`
