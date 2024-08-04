@@ -12,6 +12,7 @@
 namespace maelstrom {
     //makes a namespace called log
     namespace logging {
+        pros::Mutex coords_mutex;
         const char* timezone = "ESTEDT";
         std::vector<double> robot_coords_vector;
         pros::mutex_t robot_coords_mutex;
@@ -34,38 +35,13 @@ namespace maelstrom {
         }
 
 
-        std::string get_current_date_time(date_time_format format) {
-            auto now = std::chrono::system_clock::now();   // get current time
-            std::time_t now_time = std::chrono::system_clock::to_time_t(now);   // convert to std::time_t
-            std::tm* tm_info = std::localtime(&now_time);   // convert to std::tm
-            char buffer[20];
-
-            switch(format) {
-                case E_YEAR: 
-                    std::strftime(buffer, 20, "%Y", tm_info);
-                    break;
-                case E_MONTH:
-                    std::strftime(buffer, 20, "%m", tm_info);
-                    break;
-                case E_DAY:
-                    std::strftime(buffer, 20, "%d", tm_info);
-                    break;
-                case E_DATE: 
-                    std::strftime(buffer, 20, "%d-%m-%Y", tm_info);
-                    break;
-                case E_TIME:
-                    std::strftime(buffer, 20, "%H-%M", tm_info);
-                    break;
-                case E_DATE_TIME:
-                    std::strftime(buffer, 20, "%d-%m-%Y_%H-%M", tm_info);
-                    break;
-                case E_DATE_TIME_FILE_PATH_FORMAT:
-                    std::strftime(buffer, 20, "%d-%m-%Y_%H-%M", tm_info);
-                    break;
-                case E_NONE:
-                    break;
-            }
-            return std::string(buffer);
+        std::string get_current_date_time() {
+            int milliseconds = pros::millis();
+            int seconds = milliseconds / 1000;
+            milliseconds %= 1000;
+            int minutes = seconds / 60;
+            seconds %= 60;
+            return std::to_string(minutes) + ":" + std::to_string(seconds) + ":" + std::to_string(milliseconds);
         }
 
         bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_level){
@@ -99,12 +75,12 @@ namespace maelstrom {
             run_num = "R" + std::to_string(run_num_int);
             
             if (run_error_log) {
-                error_log_filename = base_path + run_num + "_" + std::string("error_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
+                error_log_filename = base_path + run_num + "_" + std::string("error_logfile_") + ".txt";
                 //std::string error_log_filename = log_folder_path + std::string("/error_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
                 std::fstream error_log_file;
                 error_log_file.open(error_log_filename, std::ios::out);
                 if (error_log_file.is_open()) {
-                    error_log_file << get_current_date_time(E_DATE_TIME) + "\n \n";
+                    error_log_file << "Program Started: \n \n";
                     error_log_file.close();
                 }
                 else{
@@ -113,12 +89,12 @@ namespace maelstrom {
                 }
             }
             if(run_data_log) {
-                std::string data_log_filename = base_path + run_num + "_" + std::string("data_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
+                std::string data_log_filename = base_path + run_num + "_" + std::string("data_logfile_") + ".txt";
                 //std::string data_log_filename = log_folder_path + std::string("/data_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
                 std::fstream data_log_file;
                 data_log_file.open(data_log_filename, std::ios::out);
                 if (data_log_file.is_open()) {
-                    data_log_file << get_current_date_time(E_DATE_TIME) + "\n \n";
+                    data_log_file << "Program Started: \n \n";
                     data_log_file.close();
                 }
                 else{
@@ -141,13 +117,13 @@ namespace maelstrom {
             for (int i = 0; i < pros_motor_faults.size(); i++) {
                 if (motor_fault & pros_motor_faults[i].first) {
                     if (!faults[port_index][i]){
-                        error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(port_index))) + pros_motor_faults[i].second + get_current_date_time(E_TIME) + "\n";
+                        error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(port_index))) + pros_motor_faults[i].second + get_current_date_time() + "\n";
                         faults[port_index][i] = true;
                     }
                 }
                 else {
                     if (faults[port_index][i]){
-                        error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(port_index))) + pros_motor_faults[i].second + "all clear: " + get_current_date_time(E_TIME) + "\n";
+                        error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(port_index))) + pros_motor_faults[i].second + "all clear: " + get_current_date_time() + "\n";
                     }
                     faults[port_index][i] = false;
                 }
@@ -183,11 +159,11 @@ namespace maelstrom {
                 if (!pros::competition::is_disabled()){
                     if (pros::competition::is_autonomous() && !auton_start) {
                         printf("auton: %i\n", 1);
-                        error_log_file << "Auton: \n";
+                        error_log_file << "Auton: " + get_current_date_time() + "\n";
                         auton_start = true;
                     }
                     else if (!pros::competition::is_autonomous() && !driver_start){
-                        error_log_file << "Driver: \n";
+                        error_log_file << "Driver: " + get_current_date_time() + "\n";
                         printf("driver: %i\n", 1);
                         driver_start = true;
                     }
@@ -195,13 +171,13 @@ namespace maelstrom {
                         //motor_fault_log(i, pros::c::motor_get_faults(motor_ports.at(i)));
                         if (!(motor_status(motor_ports.at(i)))) {
                             if (!faults[i][4]){
-                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " disconnected: " + get_current_date_time(E_TIME) + "\n";
+                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " disconnected: " + get_current_date_time() + "\n";
                                 faults[i][4] = true;
                             }
                         }
                         else{
                             if (faults[i][4]){
-                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " reconnected: " + get_current_date_time(E_TIME) + "\n";
+                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " reconnected: " + get_current_date_time() + "\n";
                             }
                             faults[i][4] = false;
                         }
@@ -219,38 +195,39 @@ namespace maelstrom {
         }
 
         void set_robot_coords(double x, double y, double theta) {
+            coords_mutex.take(TIMEOUT_MAX);
             pros::c::mutex_take(robot_coords_mutex, TIMEOUT_MAX);
             robot_coords_vector.push_back(x);
             robot_coords_vector.push_back(y);
             robot_coords_vector.push_back(theta);
-            pros::c::mutex_give(robot_coords_mutex);
+            coords_mutex.give();
         }
 
         void robot_coords_log() {
             while (true) {
-                pros::c::mutex_take(robot_coords_mutex, TIMEOUT_MAX);
+                coords_mutex.take(TIMEOUT_MAX);
                 if (!robot_coords_vector.empty()) {
                     std::fstream data_log_file;
                     data_log_file.open(data_log_filename, std::ios::app);
-                    data_log_file << "x: " + std::to_string(robot_coords_vector.at(0)) + " y: " + std::to_string(robot_coords_vector.at(1))+  " theta: " + std::to_string(robot_coords_vector.at(2)) + " " + get_current_date_time(E_TIME) + "\n";
+                    data_log_file << "x: " + std::to_string(robot_coords_vector.at(0)) + " y: " + std::to_string(robot_coords_vector.at(1))+  " theta: " + std::to_string(robot_coords_vector.at(2)) + " " + get_current_date_time() + "\n";
                     data_log_file.close();
                 }
-                pros::c::mutex_give(robot_coords_mutex);
+                coords_mutex.give();
                 pros::delay(500);
             }
         }
 
-        void write_to_file(std::string message, log_file file, date_time_format date_time_enum) {
+        void write_to_file(std::string message, log_file file) {
             if (file == E_ERROR_LOG){
                 std::fstream error_log_file;
                 error_log_file.open(error_log_filename, std::ios::app);
-                error_log_file << message + " " + get_current_date_time(date_time_enum) + "\n";
+                error_log_file << message + " " + get_current_date_time() + "\n";
                 error_log_file.close();
             }
             else{
                 std::fstream data_log_file;
                 data_log_file.open(data_log_filename, std::ios::app);
-                data_log_file << message + " " + get_current_date_time(date_time_enum) + "\n";
+                data_log_file << message + " " + get_current_date_time() + "\n";
                 data_log_file.close();
             }
         }
@@ -259,10 +236,10 @@ namespace maelstrom {
             std::fstream error_log_file;
             error_log_file.open(error_log_filename, std::ios::app);
             if (completion){
-                error_log_file << task_name + " Complete " + get_current_date_time(E_TIME) + "\n";
+                error_log_file << task_name + " Complete " + get_current_date_time() + "\n";
             }
             else{
-                error_log_file << task_name + " Incomplete " + get_current_date_time(E_TIME) + "\n";
+                error_log_file << task_name + " Incomplete " + get_current_date_time() + "\n";
             }
         }
     }
