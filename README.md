@@ -1,8 +1,7 @@
 # maelstrom
 
-<img src="https://img.shields.io/badge/version-v0.4.1-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/version-v0.4.2-blue?style=for-the-badge">
 
-### Currently a WiP: The functions `maelstrom::logging::set_robot_coords()` and `maelstrom::logging::coords_logging()` don't currently work
 ### Intro
 maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 
