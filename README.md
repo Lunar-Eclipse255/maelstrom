@@ -11,7 +11,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 
 2.  `cd` into your pros project
 
-3.  Make sure you are in the kernwl version 4.1.0, your version can be found out with `pros c info-project` 
+3.  Make sure you are in the kernel version 4.1.0, your version can be found out with `pros c info-project` 
 
 4. Apply the library to the project with `pros c apply maelstrom`
 
@@ -25,7 +25,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 
 2. Move the zip file to the pros project
 
-3.  Make sure you are in the kernwl version 4.1.0, your version can be found out with `pros c info-project` 
+3.  Make sure you are in the kernel version 4.1.0, your version can be found out with `pros c info-project` 
 
 4. Run `pros c fetch maelstrom@<version>.zip` in order to import the template
 
