@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
+#include <iomanip>
 #include <thread>
 //puts it in the tempest namespace
 namespace maelstrom {
@@ -16,7 +17,7 @@ namespace maelstrom {
         const char* timezone = "ESTEDT";
         std::vector<double> robot_coords_vector;
         pros::mutex_t robot_coords_mutex;
-        std::string data_log_filename;
+        static std::string data_log_filename;
         static std::string error_log_filename;
         std::fstream error_log_file;
         std::fstream data_log_file;
@@ -89,7 +90,7 @@ namespace maelstrom {
                 }
             }
             if(run_data_log) {
-                std::string data_log_filename = base_path + run_num + "_" + std::string("data_logfile_") + ".txt";
+                data_log_filename = base_path + run_num + "_" + std::string("data_logfile_") + ".txt";
                 //std::string data_log_filename = log_folder_path + std::string("/data_logfile_") + get_current_date_time(E_DATE_TIME) + ".txt";
                 std::fstream data_log_file;
                 data_log_file.open(data_log_filename, std::ios::out);
@@ -194,9 +195,17 @@ namespace maelstrom {
             }
         }
 
+        std::string format_coords(double value) {
+            if (std::isnan(value)) {
+                return "NaN";
+            }
+            std::stringstream ss;
+            ss << std::fixed << std::setprecision(2) << value;
+            return ss.str();
+        }  
+
         void set_robot_coords(double x, double y, double theta) {
             coords_mutex.take(TIMEOUT_MAX);
-            pros::c::mutex_take(robot_coords_mutex, TIMEOUT_MAX);
             robot_coords_vector.push_back(x);
             robot_coords_vector.push_back(y);
             robot_coords_vector.push_back(theta);
@@ -209,7 +218,7 @@ namespace maelstrom {
                 if (!robot_coords_vector.empty()) {
                     std::fstream data_log_file;
                     data_log_file.open(data_log_filename, std::ios::app);
-                    data_log_file << "x: " + std::to_string(robot_coords_vector.at(0)) + " y: " + std::to_string(robot_coords_vector.at(1))+  " theta: " + std::to_string(robot_coords_vector.at(2)) + " " + get_current_date_time() + "\n";
+                    data_log_file << "x: " + format_coords(robot_coords_vector.at(0)) + " y: " + format_coords(robot_coords_vector.at(1)) + " theta: " + format_coords(robot_coords_vector.at(2)) + " " + get_current_date_time() + "\n";
                     data_log_file.close();
                 }
                 coords_mutex.give();
