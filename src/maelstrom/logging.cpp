@@ -149,7 +149,7 @@ namespace maelstrom {
             bool driver_start = false;
             bool battery_below_threshold = false;
             for (int i = 0; i < motor_ports.size(); ++i) {
-                for (int j = 0; j < 4; ++j) {
+                for (int j = 0; j <= 4; ++j) {
                     faults[i][j] = false;
                 }
             }
