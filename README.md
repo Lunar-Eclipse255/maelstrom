@@ -2,7 +2,7 @@
 
 <img src="https://img.shields.io/badge/version-v0.4.4-blue?style=for-the-badge">
 
-### Intro
+## Intro
 maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 
 ## Installing maelstrom library
