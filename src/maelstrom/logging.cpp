@@ -15,7 +15,7 @@ namespace maelstrom {
     namespace logging {
         pros::Mutex coords_mutex;
         const char* timezone = "ESTEDT";
-        std::vector<double> robot_coords_vector;
+        std::vector<double> robot_coords_vector(3);
         pros::mutex_t robot_coords_mutex;
         static std::string data_log_filename;
         static std::string error_log_filename;
@@ -156,16 +156,13 @@ namespace maelstrom {
             while (true) {
                 std::fstream error_log_file;
                 error_log_file.open(error_log_filename, std::ios::app);
-                printf("error error: %s\n", error_log_filename.c_str());
                 if (!pros::competition::is_disabled()){
                     if (pros::competition::is_autonomous() && !auton_start) {
-                        printf("auton: %i\n", 1);
-                        error_log_file << "Auton: " + get_current_date_time() + "\n";
+                        error_log_file << "Auton: " + get_current_date_time() + "\n \n";
                         auton_start = true;
                     }
                     else if (!pros::competition::is_autonomous() && !driver_start){
-                        error_log_file << "Driver: " + get_current_date_time() + "\n";
-                        printf("driver: %i\n", 1);
+                        error_log_file << "\n" + std::string("Driver: ") + get_current_date_time() + "\n \n";
                         driver_start = true;
                     }
                     for (int i = 0; i < motor_ports.size(); i++){
@@ -206,9 +203,9 @@ namespace maelstrom {
 
         void set_robot_coords(double x, double y, double theta) {
             coords_mutex.take(TIMEOUT_MAX);
-            robot_coords_vector.push_back(x);
-            robot_coords_vector.push_back(y);
-            robot_coords_vector.push_back(theta);
+            robot_coords_vector.at(0) = x;
+            robot_coords_vector.at(1) = y;
+            robot_coords_vector.at(2) = theta;
             coords_mutex.give();
         }
 
