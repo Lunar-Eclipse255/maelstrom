@@ -52,17 +52,26 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 ## Using maelstrom
 1. In initialize() in main.cpp call 'init()':
 ```cpp
-bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);```
-
-    a. 'bool run_error_log' is used if you want to create a file to log errors
-    b. 'bool run_data_log' is used if you want to create a file to log data such as coordinates
-    c. `std::vector<int> left_motor_ports``` is for inputting the ports of your left motors in the form of a std::vector
-    d. `std::vector<int> right_motor_ports`` is for inputting the ports of your right motors in the form of a std::vector
-    e. `int battery_threshold` is for inputting at what battery level do you want to be warned about
-    f. Here is an example:
+bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
+```
+-
+    * 'bool run_error_log' is used if you want to create a file to log errors
+    * 'bool run_data_log' is used if you want to create a file to log data such as coordinates
+    * `std::vector<int> left_motor_ports``` is for inputting the ports of your left motors in the form of a std::vector
+    * `std::vector<int> right_motor_ports`` is for inputting the ports of your right motors in the form of a std::vector
+    * `int battery_threshold` is for inputting at what battery level do you want to be warned about
+    * Here is an example:
        ```cpp
         std::vector<int> left_motors = {1, -2, 3};
         std::vector<int> right_motors = {-4, 5, -6};
         bool* temp = maelstrom::logging::init(true, true, left_motors, right_motors, 50);
         ```
+2. To derefrence the returned pointer and assign it to a boolean value do this: (note outside of any functions initialize file_created ex, `bool file_created[2];`)
+   ```cpp
+       file_created[0] = temp[0];
+       file_created[1] = temp[1];
+       delete[] temp;
+   ```
+3. 
+   
 
