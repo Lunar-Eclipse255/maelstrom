@@ -65,7 +65,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
         std::vector<int> right_motors = {-4, 5, -6};
         bool* temp = maelstrom::logging::init(true, true, left_motors, right_motors, 50);
         ```
-2. To derefrence the returned pointer and assign it to a boolean value do this: (note outside of any functions initialize file_created ex. `bool file_created[2];`)
+2. To dereference the returned pointer and assign it to a boolean value do this: (note outside of any functions initialize file_created ex. `bool file_created[2];`)
    ```cpp
        file_created[0] = temp[0];
        file_created[1] = temp[1];
