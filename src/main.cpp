@@ -36,7 +36,9 @@ void initialize() {
 	pros::lcd::register_btn1_cb(on_center_button);
 	
 	bool* temp = maelstrom::logging::init(true, true, left_motors, right_motors, 50);
-    
+	file_created[0] = temp[0];
+    file_created[1] = temp[1];
+    delete[] temp; 
 }
 
 /**
