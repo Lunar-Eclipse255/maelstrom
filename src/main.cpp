@@ -101,7 +101,6 @@ void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	pros::MotorGroup left_mg({left_motors.begin(), left_motors.end()}); // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup right_mg({right_motors.begin(), right_motors.end()});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
-	maelstrom::logging::set_robot_coords(x_pos, y_pos, theta_heading);
 	pros::Task coords_logging(maelstrom::logging::robot_coords_log);
 	while (true) {
 		x_pos = 0;

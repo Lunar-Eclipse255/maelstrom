@@ -15,7 +15,7 @@ namespace maelstrom {
     namespace logging {
         pros::Mutex coords_mutex;
         const char* timezone = "ESTEDT";
-        std::vector<double> robot_coords_vector(3);
+        std::vector<double> robot_coords_vector = {NAN, NAN, NAN};
         pros::mutex_t robot_coords_mutex;
         static std::string data_log_filename;
         static std::string error_log_filename;
