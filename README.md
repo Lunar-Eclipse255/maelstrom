@@ -86,5 +86,25 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
    ```cpp
       pros::Task error_logger(maelstrom::logging::robot_faults_log);
    ```
+
+
+5. In `opcontrol()` and before the `while (true)` loop put this line of code that in the background writes to the data log file the current coordinates of the robot:
+   ```cpp
+      pros::Task coords_logging(maelstrom::logging::robot_coords_log);
+   ```
+
+
+6. In `opcontrol()` but inside the `while (true)` loop call this function that updates the coordinates that `maelstrom::logging::robot_coords_log()` uses
+   ```cpp
+      void set_robot_coords(double x, double y, double theta);
+   ```
+   * Change double x, double y, and double theta, for variables of the double type that hold those respective coordinates. For example:
+     ```cpp
+        maelstrom::logging::set_robot_coords(x_pos, y_pos, theta_heading);
+     ```
+
+     
+##Extra Functions
    
 
+##Function Compatibility Notes
