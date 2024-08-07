@@ -50,7 +50,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 
 
 ## Using maelstrom
-1. In initialize() in main.cpp call 'init()':
+1. In `initialize()` in main.cpp call `init()`:
    ```cpp
       bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
    ```
