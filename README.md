@@ -104,7 +104,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
      ```
 
      
-##Extra Functions
+## Extra Functions
    
 
-##Function Compatibility Notes
+## Function Compatibility Notes
