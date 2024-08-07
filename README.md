@@ -65,12 +65,26 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
         std::vector<int> right_motors = {-4, 5, -6};
         bool* temp = maelstrom::logging::init(true, true, left_motors, right_motors, 50);
         ```
+
+       
 2. To dereference the returned pointer and assign it to a boolean value do this: (note outside of any functions initialize file_created ex. `bool file_created[2];`)
    ```cpp
        file_created[0] = temp[0];
        file_created[1] = temp[1];
        delete[] temp;
    ```
-3. 
+
+   
+3. In different functions you can use the code provided below to check if a file was succesfully created before doing anything to the file, so if the file failed to create the code wouldn't attempt to write to it:
+   ```cpp
+      if (file_created[0]) {}
+   ```
+   * Use `file_created[0]` to check if the error_log file was succesfully created and `file_created[1]` to check if the data_log file was succesfully created
+
+  
+4. In `autonomous()` use this code to run the error logger in background
+   ```cpp
+      pros::Task error_logger(maelstrom::logging::robot_faults_log);
+   ```
    
 
