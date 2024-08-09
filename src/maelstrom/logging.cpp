@@ -180,12 +180,12 @@ namespace maelstrom {
                             faults[i][4] = false;
                         }
                     }
-            //         if (!(battery(battery_threshold))) {
-            //             if(!battery_below_threshold){
-            //                 error_log_file << "Battery below " + std::to_string(battery_threshold) + "% " + get_current_date_time(E_TIME) + "\n";
-            //                 battery_below_threshold = true;
-            //             }
-            //         }
+                    if (!(battery(battery_threshold))) {
+                        if(!battery_below_threshold){
+                            error_log_file << "Battery below " + std::to_string(battery_threshold) + "% " + get_current_date_time() + "\n";
+                            battery_below_threshold = true;
+                        }
+                    }
                 }
                 pros::delay(500);
                 error_log_file.close();
