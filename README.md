@@ -2,6 +2,19 @@
 
 <img src="https://img.shields.io/badge/version-v0.4.6-blue?style=for-the-badge">
 
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Dependencies](#dependencies)
+3. [File Structure](#file-structure)
+4. [Key Features](#key-features)
+5. [Usage Guide](#usage-guide)
+6. [Autonomous Routines](#autonomous-routines)
+7. [Operator Control](#operator-control)
+8. [Display System](#display-system)
+9. [PID Tuning](#pid-tuning)
+10. [Debugging](#debugging)
+11. [License](#license)
+
 ## Intro
 maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 
