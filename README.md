@@ -125,8 +125,8 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
           maelstrom::logging::write_to_file("Good Luck", maelstrom::logging::E_DATA_LOG);
        ```
 2. In any function you can use `task_complete(std::string task_name, bool completion);` to write to the error log file if a task was completed or not
-     * It takes an std::string for the task name and a boolean to see if a task was completed or not
-     * ex.)
+   * It takes an std::string for the task name and a boolean to see if a task was completed or not
+   * ex.)
        ```cpp
           maelstrom::logging::task_complete("Auton", auton_complete);
        ```
