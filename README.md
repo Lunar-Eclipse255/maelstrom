@@ -133,9 +133,9 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
        would write `Auton Complete` to the error log file if auton_complete was true, and `Auton Incomplete` if auton_complete was false
 3. In any function `battery(int battery_threshold);` can be used to see if the battery percentage is lower than an int threshold. This funtion is used in `robot_faults_log()` to logto the error log file if the battery is too low but can also be used seperately
   * In the example below it will return true if the battery percentage is above 50% and returns false if the battery percentage is less than or equal to 50%
-   ```cpp
-      maelstrom::logging::battery(50);
-   ```
+      ```cpp
+         maelstrom::logging::battery(50);
+      ```
 4. `motor_status(int port);` can be used to get if a motor is disconnected at a port specified by `int port`. It will return true if the motor is connected and false if the motor is disconnected. This funtion is used in `robot_faults_log()` to log to the error log file if a drive motor is disconnected but can also be used seperately
    * The example below checks if the motor at port 20 is connected
      ```cpp
