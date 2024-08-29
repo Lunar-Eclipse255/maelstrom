@@ -1,13 +1,13 @@
 [
     {
       "metadata": {
-        "location": "https://github.com/Lunar-Eclipse255/maelstrom/releases/download/v0.4.6/maelstrom@0.4.6.zip"
+        "location": "https://github.com/Lunar-Eclipse255/maelstrom/releases/download/v0.4.7/maelstrom@0.4.7.zip"
       },
       "name": "maelstrom",
       "py/object": "pros.conductor.templates.base_template.BaseTemplate",
       "supported_kernels": ">=4.1.0",
       "target": "v5",
-      "version": "0.4.6"
+      "version": "0.4.7"
     }
   ]
   

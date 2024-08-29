@@ -166,7 +166,7 @@ namespace maelstrom {
                         driver_start = true;
                     }
                     for (int i = 0; i < motor_ports.size(); i++){
-                        //motor_fault_log(i, pros::c::motor_get_faults(motor_ports.at(i)));
+                        motor_fault_log(i, pros::c::motor_get_faults(motor_ports.at(i)));
                         if (!(motor_status(motor_ports.at(i)))) {
                             if (!faults[i][4]){
                                 error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " disconnected: " + get_current_date_time() + "\n";

@@ -1,6 +1,6 @@
 # maelstrom
 
-<img src="https://img.shields.io/badge/version-v0.4.6-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/version-v0.4.7-blue?style=for-the-badge">
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
