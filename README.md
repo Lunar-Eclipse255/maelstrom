@@ -119,8 +119,8 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
      
 ## Extra Functions
 1. In any function you can use `maelstrom::logging::write_to_file(std::string message, log_file file);` this function can be used to write a message to either the log or error file
-  * The std::string will be the message and the log_file will be used to specify which file to write to, use `E_ERROR_LOG` to write to the error log file and `E_DATA_LOG` to write to the data log file.
-  * This example will write the message Good Luck to the data log file:
+   * The std::string will be the message and the log_file will be used to specify which file to write to, use `E_ERROR_LOG` to write to the error log file and `E_DATA_LOG` to write to the data log file.
+   * This example will write the message Good Luck to the data log file:
        ```cpp
           maelstrom::logging::write_to_file("Good Luck", maelstrom::logging::E_DATA_LOG);
        ```
@@ -132,7 +132,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
        ```
        would write `Auton Complete` to the error log file if auton_complete was true, and `Auton Incomplete` if auton_complete was false
 3. In any function `battery(int battery_threshold);` can be used to see if the battery percentage is lower than an int threshold. This funtion is used in `robot_faults_log()` to logto the error log file if the battery is too low but can also be used seperately
-  * In the example below it will return true if the battery percentage is above 50% and returns false if the battery percentage is less than or equal to 50%
+   * In the example below it will return true if the battery percentage is above 50% and returns false if the battery percentage is less than or equal to 50%
       ```cpp
          maelstrom::logging::battery(50);
       ```
@@ -141,6 +141,15 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
      ```cpp
         maelstrom::logging::motor_status(20);
      ```
+
+5. `get_current_date_time();` returns the time since the program began in a std::string in the format `minutes:seconds:milliseconds` for example `1:50:55`
+     ```cpp
+        maelstrom::logging::get_current_date_time();
+     ```
+   
 ## Output and functionality of maelstrom functions
 
 ## Function Compatibility Notes
+1. Every function except for `maelstrom::logging::motor_status()`, `maelstrom::logging::get_current_date_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
+
+2. `maelstrom::logging::robot_coords_log()` needs `maelstrom::logging::set_robot_coords()` to update the coordinates or `maelstrom::logging::robot_coords_log()` will always log the coordinates as NaN
