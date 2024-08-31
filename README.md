@@ -62,7 +62,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 3. On the first line of run_nums.txt write R0
 
 
-## Using maelstrom
+## Using maelstrom (Core Functions)
 1. In `initialize()` in main.cpp call `init()`:
    ```cpp
       bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
@@ -116,6 +116,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
         maelstrom::logging::set_robot_coords(x_pos, y_pos, theta_heading);
      ```
 
+## Output and functionality of maelstrom core functions
      
 ## Extra Functions
 1. In any function you can use `maelstrom::logging::write_to_file(std::string message, log_file file);` this function can be used to write a message to either the log or error file
@@ -146,8 +147,6 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
      ```cpp
         maelstrom::logging::get_current_date_time();
      ```
-   
-## Output and functionality of maelstrom functions
 
 ## Function Compatibility Notes
 1. Every function except for `maelstrom::logging::motor_status()`, `maelstrom::logging::get_current_date_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
