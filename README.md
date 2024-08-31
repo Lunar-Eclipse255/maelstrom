@@ -4,16 +4,15 @@
 
 ## Table of Contents
 1. [Intro](#Intro)
-2. [Dependencies](#dependencies)
-3. [File Structure](#file-structure)
-4. [Key Features](#key-features)
-5. [Usage Guide](#usage-guide)
-6. [Autonomous Routines](#autonomous-routines)
-7. [Operator Control](#operator-control)
-8. [Display System](#display-system)
-9. [PID Tuning](#pid-tuning)
-10. [Debugging](#debugging)
-11. [License](#license)
+2. [Installation](#Installing-maelstrom-library)
+3. [Alternative Installation](#Alternative-instructions-for-installing-maelstrom-library)
+4. [Set-up](#Set-up)
+5. [Alternative set-up](#Alternative-set-up)
+6. [Using maelstrom (core functions)](#Using-maelstrom-(core-functions))
+7. [Output and functionality of core functions](#Output-and-functionality-of-maelstrom-core-functions)
+8. [Extra functions](#Extra-functions)
+9. [Function compatibility notes](#Function-compatibility-notes)
+11. [License](#License)
 
 ## Intro
 maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
@@ -62,7 +61,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 3. On the first line of run_nums.txt write R0
 
 
-## Using maelstrom (Core Functions)
+## Using maelstrom (core functions)
 1. In `initialize()` in main.cpp call `init()`:
    ```cpp
       bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
@@ -118,7 +117,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
 
 ## Output and functionality of maelstrom core functions
      
-## Extra Functions
+## Extra functions
 1. In any function you can use `maelstrom::logging::write_to_file(std::string message, log_file file);` this function can be used to write a message to either the log or error file
    * The std::string will be the message and the log_file will be used to specify which file to write to, use `E_ERROR_LOG` to write to the error log file and `E_DATA_LOG` to write to the data log file.
    * This example will write the message Good Luck to the data log file:
@@ -148,7 +147,10 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/)
         maelstrom::logging::get_current_date_time();
      ```
 
-## Function Compatibility Notes
+## Function compatibility notes
 1. Every function except for `maelstrom::logging::motor_status()`, `maelstrom::logging::get_current_date_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
 
 2. `maelstrom::logging::robot_coords_log()` needs `maelstrom::logging::set_robot_coords()` to update the coordinates or `maelstrom::logging::robot_coords_log()` will always log the coordinates as NaN
+
+## License
+- MIT License
