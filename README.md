@@ -8,7 +8,7 @@
 3. [Alternative Installation](#Alternative-instructions-for-installing-maelstrom-library)
 4. [Set-up](#Set-up)
 5. [Alternative set-up](#Alternative-set-up)
-6. [Using maelstrom (core functions)](#Using-maelstrom-(core-functions))
+6. [Using maelstrom (core functions)](#Using-maelstrom-core-functions)
 7. [Output and functionality of core functions](#Output-and-functionality-of-maelstrom-core-functions)
 8. [Extra functions](#Extra-functions)
 9. [Function compatibility notes](#Function-compatibility-notes)
