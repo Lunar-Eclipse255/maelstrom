@@ -3,7 +3,7 @@
 <img src="https://img.shields.io/badge/version-v0.4.7-blue?style=for-the-badge">
 
 ## Table of Contents
-1. [Project Overview](#project-overview)
+1. [Intro](#Intro)
 2. [Dependencies](#dependencies)
 3. [File Structure](#file-structure)
 4. [Key Features](#key-features)
