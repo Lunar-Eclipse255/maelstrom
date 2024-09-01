@@ -1,5 +1,7 @@
 # maelstrom
-<img src="docs/assets/maelstrom_logo.png">
+<p align="center">
+   <img src="docs/assets/maelstrom_logo.png">
+</p>
 <img src="https://img.shields.io/badge/version-v0.4.7-blue?style=for-the-badge">
 
 ## Table of Contents
