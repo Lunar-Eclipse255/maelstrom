@@ -20,8 +20,6 @@
 ## Intro
 maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access data and information in cases where the robot can't be connected to a computer and so that data can be accessed at a later time, even when the program is terminated. Developed by Gaston from V5RC Team 6104G Tempest
 
-<img src="docs/assets/Tempest_Logo.png">
-
 ## Installing maelstrom library
 1. In the integrated PROS terminal, run the command `pros c add-depot maelstrom https://lunar-eclipse255.github.io/maelstrom/template.json`
 
@@ -162,3 +160,5 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 
 ## Contact
 You can contact me through Discord if any issues arise, I am Gaston | 6104G on many VEX Discord Servers.
+<p></p>
+<img src="docs/assets/Tempest_Logo.PNG" width="100"/>
