@@ -15,6 +15,7 @@
 8. [Extra functions](#Extra-functions)
 9. [Function compatibility notes](#Function-compatibility-notes)
 11. [License](#License)
+12. [Contact](#Contact)
 
 ## Intro
 maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access data and information in cases where the robot can't be connected to a computer and so that data can be accessed at a later time, even when the program is terminated.
@@ -156,3 +157,6 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 
 ## License
 - MIT License
+
+## Contact
+You can contact me on Discord if any issues arise, I am Gaston | 6104G on many VEX Discord Servers.
