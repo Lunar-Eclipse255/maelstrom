@@ -159,4 +159,4 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 - MIT License
 
 ## Contact
-You can contact me on Discord if any issues arise, I am Gaston | 6104G on many VEX Discord Servers.
+You can contact me through Discord if any issues arise, I am Gaston | 6104G on many VEX Discord Servers.
