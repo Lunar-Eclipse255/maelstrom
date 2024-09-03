@@ -60,7 +60,7 @@ namespace maelstrom {
             if (!run_num_file.is_open()){
                 init_arr[0] = false;
                 init_arr[1] = false;
-                printf("Somethings is wrong with run_nums.txt");
+                printf("Somethings is wrong with run_nums.txt\n");
                 return init_arr;
             }
             std::string line;
@@ -86,7 +86,7 @@ namespace maelstrom {
                 }
                 else{
                     init_arr[0] = false;
-                    printf("Somethings is wrong with error_logfile");
+                    printf("Somethings is wrong with error_logfile\n");
                 }
             }
             if(run_data_log) {
@@ -100,7 +100,7 @@ namespace maelstrom {
                 }
                 else{
                     init_arr[1] = false;
-                    printf("Somethings is wrong with data_logfile");
+                    printf("Somethings is wrong with data_logfile\n");
                 }
             }
             if (run_data_log || run_error_log) {
