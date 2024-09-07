@@ -11,9 +11,9 @@
 4. [Set-up](#Set-up)
 5. [Alternative set-up](#Alternative-set-up)
 6. [Using maelstrom (core functions)](#Using-maelstrom-core-functions)
-7. [Output and functionality of core functions](#Output-and-functionality-of-maelstrom-core-functions)
-8. [Extra functions](#Extra-functions)
-9. [Function compatibility notes](#Function-compatibility-notes)
+7. [Extra functions](#Extra-functions)
+8. [Output and functionality of maelstrom functions](#Output-and-functionality-of-maelstrom-functions)
+10. [Function compatibility notes](#Function-compatibility-notes)
 11. [License](#License)
 12. [Contact](#Contact)
 
@@ -118,8 +118,6 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
         maelstrom::logging::set_robot_coords(x_pos, y_pos, theta_heading);
      ```
 
-## Output and functionality of maelstrom core functions
-     
 ## Extra functions
 1. In any function you can use `maelstrom::logging::write_to_file(std::string message, log_file file);` this function can be used to write a message to either the log or error file
    * The std::string will be the message and the log_file will be used to specify which file to write to, use `E_ERROR_LOG` to write to the error log file and `E_DATA_LOG` to write to the data log file.
@@ -149,6 +147,27 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
      ```cpp
         maelstrom::logging::get_current_date_time();
      ```
+
+## Output and functionality of maelstrom functions
+1. `init()`:
+  * Program Started:
+  * Something is wrong to terminal
+2. `robot_faults_log()`:
+   * Auton Started
+   * Driver Started
+   * <img src="docs/assets/driver_start.png" width="100"/>
+   * Over Temp (+ all clear) (untested + no pic)
+   * Driver Fault (H-bridge Fault) (+ all clear) (untested + no pic)
+   * Over Current (+ all clear) (untested + no pic)
+   * H-bridge Over Current (+ all clear) (untested + no pic)
+   * Motor Disconnect (+ reconnect)
+   * Battery Below Threshold
+3. `robot_coords_log()`
+   * Coords (no pic)
+4. `write_to_file()`
+   * Messages
+5. `task_complete()`
+   * Completed Tasks
 
 ## Function compatibility notes
 1. Every function except for `maelstrom::logging::motor_status()`, `maelstrom::logging::get_current_date_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
