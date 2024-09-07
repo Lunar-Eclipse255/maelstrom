@@ -254,7 +254,10 @@
         "version": "8.3.8"
       }
     },
-    "upload_options": {},
+    "upload_options": {
+      "slot": 5,
+      "after": "run"
+    },
     "use_early_access": false
   }
 }
