@@ -73,7 +73,6 @@ void competition_initialize() {}
 void autonomous() {
 
 	maelstrom::logging::write_to_file("Good Luck", maelstrom::logging::E_DATA_LOG);
-	maelstrom::logging::write_to_file("Bad Luck", maelstrom::logging::E_ERROR_LOG);
 
 }
 

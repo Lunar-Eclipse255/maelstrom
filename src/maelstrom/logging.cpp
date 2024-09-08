@@ -23,7 +23,6 @@ namespace maelstrom {
         std::fstream data_log_file;
         std::vector<int> motor_ports;
         std::array<bool, 2> init_arr = {false, false};
-        int num = 0;
         int battery_threshold;
         std::vector<std::vector<bool>> faults;
         std::vector<std::pair<pros::motor_fault_e_t, std::string>> pros_motor_faults = {
@@ -121,28 +120,29 @@ namespace maelstrom {
 
         void motor_fault_log (int port_index, uint32_t motor_fault) {
             if (init_arr[0]) {
-                printf("test write motor fault\n");
                 std::fstream error_log_file;
                 error_log_file.open(error_log_filename, std::ios::app);
                 for (int i = 0; i < pros_motor_faults.size(); i++) {
-                    if (motor_fault & pros_motor_faults[i].first) {
-                        if (!faults[port_index][i]){
-                            error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(port_index))) + pros_motor_faults[i].second + get_current_date_time() + "\n";
-                            faults[port_index][i] = true;
+                    if (motor_connected(motor_ports.at(port_index))){
+                        if (motor_fault & pros_motor_faults[i].first) {
+                            if (!faults[port_index][i]){
+                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(port_index))) + pros_motor_faults[i].second + get_current_date_time() + "\n";
+                                faults[port_index][i] = true;
+                            }
                         }
-                    }
-                    else {
-                        if (faults[port_index][i]){
-                            error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(port_index))) + pros_motor_faults[i].second + "all clear: " + get_current_date_time() + "\n";
+                        else {
+                            if (faults[port_index][i]){
+                                error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(port_index))) + pros_motor_faults[i].second + "all clear: " + get_current_date_time() + "\n";
+                            }
+                            faults[port_index][i] = false;
                         }
-                        faults[port_index][i] = false;
                     }
                 }
                 error_log_file.close();
             }
         }
 
-        bool motor_status(int port) {
+        bool motor_connected(int port) {
             int temperature = pros::c::motor_get_current_draw(port);
             return !(temperature == PROS_ERR);
         }
@@ -178,16 +178,10 @@ namespace maelstrom {
                         for (int i = 0; i < motor_ports.size(); i++){
                             error_log_file.close();
                             pros::delay(50);
-                            if (num==0){
-                            motor_fault_log(i, 0x08);
-                            //motor_fault_log(i, pros::c::motor_get_faults(motor_ports.at(i)));
-                            }
-                            else{
-                                motor_fault_log(i, pros::E_MOTOR_FAULT_NO_FAULTS);
-                            }
+                            motor_fault_log(i, pros::c::motor_get_faults(motor_ports.at(i)));
                             pros::delay(50);
                             error_log_file.open(error_log_filename, std::ios::app);
-                            if (!(motor_status(motor_ports.at(i)))) {
+                            if (!(motor_connected(motor_ports.at(i)))) {
                                 if (!faults[i][4]){
                                     error_log_file << "Motor: " + std::to_string(abs(motor_ports.at(i))) + " disconnected: " + get_current_date_time() + "\n";
                                     faults[i][4] = true;
@@ -200,7 +194,6 @@ namespace maelstrom {
                                 faults[i][4] = false;
                             }
                         }
-                        num ++;
                         if (!(battery(battery_threshold))) {
                             if(!battery_below_threshold){
                                 error_log_file << "Battery below " + std::to_string(battery_threshold) + "% " + get_current_date_time() + "\n";
@@ -233,7 +226,6 @@ namespace maelstrom {
 
         void robot_coords_log() {
             if (init_arr[1]) {
-                printf("test write coords\n");
                 while (true) {
                     coords_mutex.take(TIMEOUT_MAX);
                     if (!robot_coords_vector.empty()) {
@@ -251,7 +243,6 @@ namespace maelstrom {
         void write_to_file(std::string message, log_file file) {
             if (file == E_ERROR_LOG){
                 if (init_arr[0]) {
-                    printf("test write error\n");
                     std::fstream error_log_file;
                     error_log_file.open(error_log_filename, std::ios::app);
                     error_log_file << message + " " + get_current_date_time() + "\n";
@@ -260,7 +251,6 @@ namespace maelstrom {
             }
             else{
                 if (init_arr[1]) {
-                    printf("test write data\n");
                     std::fstream data_log_file;
                     data_log_file.open(data_log_filename, std::ios::app);
                     data_log_file << message + " " + get_current_date_time() + "\n";
@@ -271,7 +261,6 @@ namespace maelstrom {
 
         void task_complete(std::string task_name, bool completion) {
             if (init_arr[0]) {
-                printf("test task\n");
                 std::fstream error_log_file;
                 error_log_file.open(error_log_filename, std::ios::app);
                 if (completion){

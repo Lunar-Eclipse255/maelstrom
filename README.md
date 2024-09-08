@@ -2,7 +2,7 @@
 <p align="center">
    <img src="docs/assets/maelstrom_circle.png">
 </p>
-<img src="https://img.shields.io/badge/version-v0.4.7-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/version-v0.5.0-blue?style=for-the-badge">
 
 ## Table of Contents
 1. [Intro](#Intro)
@@ -137,10 +137,10 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
       ```cpp
          maelstrom::logging::battery(50);
       ```
-4. `motor_status(int port);` can be used to get if a motor is disconnected at a port specified by `int port`. It will return true if the motor is connected and false if the motor is disconnected. This funtion is used in `robot_faults_log()` to log to the error log file if a drive motor is disconnected but can also be used seperately
+4. `motor_connected(int port);` can be used to get if a motor is disconnected at a port specified by `int port`. It will return true if the motor is connected and false if the motor is disconnected. This funtion is used in `robot_faults_log()` to log to the error log file if a drive motor is disconnected but can also be used seperately
    * The example below checks if the motor at port 20 is connected
      ```cpp
-        maelstrom::logging::motor_status(20);
+        maelstrom::logging::motor_connected(20);
      ```
 
 5. `get_current_date_time();` returns the time since the program began in a std::string in the format `minutes:seconds:milliseconds` for example `1:50:55`
@@ -200,7 +200,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
      <img src="docs/assets/auton_incomplete.png" width="17%"/>
 
 ## Function compatibility notes
-1. Every function except for `maelstrom::logging::motor_status()`, `maelstrom::logging::get_current_date_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
+1. Every function except for `maelstrom::logging::motor_connected()`, `maelstrom::logging::get_current_date_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
 
 2. `maelstrom::logging::robot_coords_log()` needs `maelstrom::logging::set_robot_coords()` to update the coordinates or `maelstrom::logging::robot_coords_log()` will always log the coordinates as NaN
 

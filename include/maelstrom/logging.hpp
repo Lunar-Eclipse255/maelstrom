@@ -29,7 +29,8 @@ namespace maelstrom {
         bool battery(int battery_threshold);
         std::string get_current_date_time();
         void robot_faults_log();
-        bool motor_status(int port);
+        bool motor_connected(int port);
+        void motor_fault_log (int port_index, uint32_t motor_fault);
         void robot_coords_log(void);
         void set_robot_coords(double x, double y, double theta);
         void set_timezone (const char* timezone_string);
