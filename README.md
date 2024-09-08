@@ -196,7 +196,8 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 * Completed Tasks:
    * This function writes to the error logfile that a task was complete or incomplete, task name, and boolean given by user. This is accompanied by a timestamp.
      
-     <img src="docs/assets/auton_incomplete.png" width="15%"/>
+     <img src="docs/assets/auton_complete.png" width="15%"/>
+     <img src="docs/assets/auton_incomplete.png" width="17%"/>
 
 ## Function compatibility notes
 1. Every function except for `maelstrom::logging::motor_status()`, `maelstrom::logging::get_current_date_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
