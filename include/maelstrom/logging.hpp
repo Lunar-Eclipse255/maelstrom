@@ -24,7 +24,7 @@ namespace maelstrom {
             E_DATA_LOG
         } log_file;
 
-        extern bool faults[][5];
+        extern std::vector<std::vector<bool>> faults;
         bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
         bool battery(int battery_threshold);
         std::string get_current_date_time();

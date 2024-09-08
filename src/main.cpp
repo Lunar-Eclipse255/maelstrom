@@ -34,11 +34,11 @@ void initialize() {
 	// pros::lcd::initialize();
 	// pros::lcd::set_text(1, "Hello PROS User!");
 	// pros::lcd::register_btn1_cb(on_center_button);
-	
-	bool* temp = maelstrom::logging::init(true, true, left_motors, right_motors, 50);
-	file_created[0] = temp[0];
-    file_created[1] = temp[1];
-    delete[] temp; 
+	maelstrom::logging::init(true, true, left_motors, right_motors, 50);
+	// file_created[0] = temp[0];
+    // file_created[1] = temp[1];
+    // delete[] temp; 
+    pros::Task error_logger(maelstrom::logging::robot_faults_log);
 }
 
 /**
@@ -72,10 +72,9 @@ void competition_initialize() {}
  */
 void autonomous() {
 
-	if (file_created[0]) {
-		maelstrom::logging::write_to_file("Good Luck", maelstrom::logging::E_DATA_LOG);
-        pros::Task error_logger(maelstrom::logging::robot_faults_log);
-    }
+	maelstrom::logging::write_to_file("Good Luck", maelstrom::logging::E_DATA_LOG);
+	maelstrom::logging::write_to_file("Bad Luck", maelstrom::logging::E_ERROR_LOG);
+
 }
 
 /**
@@ -92,9 +91,7 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	if (file_created[0]) {
-        maelstrom::logging::task_complete("Auton", auton_complete);
-    }
+    maelstrom::logging::task_complete("Auton", auton_complete);
 	double x_pos = 0;
 	double y_pos = 0;
 	double theta_heading = 0;
@@ -118,5 +115,4 @@ void opcontrol() {
 		right_mg.move(dir + turn);                     // Sets right motor voltage
 		pros::delay(20);                               // Run for 20 ms then update
 	}
-	maelstrom::logging::task_complete("Driver", true);
 }
