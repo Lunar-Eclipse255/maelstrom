@@ -67,7 +67,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 ## Using maelstrom (core functions)
 1. In `initialize()` in main.cpp call `init()`:
    ```cpp
-      bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
+      init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
    ```
     * 'bool run_error_log' is used if you want to create a file to log errors
     * 'bool run_data_log' is used if you want to create a file to log data such as coordinates
@@ -78,38 +78,23 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
        ```cpp
         std::vector<int> left_motors = {1, -2, 3};
         std::vector<int> right_motors = {-4, 5, -6};
-        bool* temp = maelstrom::logging::init(true, true, left_motors, right_motors, 50);
+        maelstrom::logging::init(true, true, left_motors, right_motors, 50);
         ```
 
-       
-2. To dereference the returned pointer and assign it to a boolean value do this: (note outside of any functions initialize file_created ex. `bool file_created[2];`)
-   ```cpp
-       file_created[0] = temp[0];
-       file_created[1] = temp[1];
-       delete[] temp;
-   ```
-
-   
-3. In different functions you can use the code provided below to check if a file was succesfully created before doing anything to the file, so if the file failed to create the code wouldn't attempt to write to it:
-   ```cpp
-      if (file_created[0]) {}
-   ```
-   * Use `file_created[0]` to check if the error_log file was succesfully created and `file_created[1]` to check if the data_log file was succesfully created
-
   
-4. In `autonomous()` use this code to run the error logger in background
+2. In `autonomous()` use this code to run the error logger in background
    ```cpp
       pros::Task error_logger(maelstrom::logging::robot_faults_log);
    ```
 
 
-5. In `opcontrol()` and before the `while (true)` loop put this line of code that in the background writes to the data log file the current coordinates of the robot:
+3. In `opcontrol()` and before the `while (true)` loop put this line of code that in the background writes to the data log file the current coordinates of the robot:
    ```cpp
       pros::Task coords_logging(maelstrom::logging::robot_coords_log);
    ```
 
 
-6. In `opcontrol()` but inside the `while (true)` loop call this function that updates the coordinates that `maelstrom::logging::robot_coords_log()` uses
+4. In `opcontrol()` but inside the `while (true)` loop call this function that updates the coordinates that `maelstrom::logging::robot_coords_log()` uses
    ```cpp
       void set_robot_coords(double x, double y, double theta);
    ```
@@ -152,6 +137,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 1. `init()`:
 * Program Started:
   * Whenever the program starts this will appear as a header in both the error and data logfile
+  * It returns an array of 2 bools. The first bool being if the error logfile was succesfully created and the second bool is if the data logfile was succesfully created. 
 
     <img src="docs/assets/program_start.png" width="100"/>
 * PROS Brain Terminal Error Messages:
