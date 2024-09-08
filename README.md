@@ -150,24 +150,39 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 
 ## Output and functionality of maelstrom functions
 1. `init()`:
-  * Program Started:
-  * Something is wrong to terminal
+   * Program Started:
+
+     <img src="docs/assets/program_start.png" width="100"/>
+   * Something is wrong to terminal
 2. `robot_faults_log()`:
-   * Auton Started
-   * Driver Started
-   * <img src="docs/assets/driver_start.png" width="100"/>
-   * Over Temp (+ all clear) (untested + no pic)
-   * Driver Fault (H-bridge Fault) (+ all clear) (untested + no pic)
-   * Over Current (+ all clear) (untested + no pic)
-   * H-bridge Over Current (+ all clear) (untested + no pic)
-   * Motor Disconnect (+ reconnect)
-   * Battery Below Threshold
+   * Auton Started:
+     
+     <img src="docs/assets/auton_start.png" width="100"/>
+   * Driver Started:
+  
+     <img src="docs/assets/driver_start.png" width="100"/>
+   * Over Temp (+ all clear) (untested + no pic):
+   * Driver Fault (H-bridge Fault) (+ all clear) (untested + no pic):
+   * Over Current (+ all clear) (untested + no pic):
+   * H-bridge Over Current (+ all clear) (untested + no pic):
+   * Motor Disconnect (+ reconnect):
+     
+     <img src="docs/assets/motor_dc_and_rc.png" width="20%"/>
+   * Battery Below Threshold:
+     
+     <img src="docs/assets/battery_error_50.png" width="15%"/>
+     
+     <img src="docs/assets/battery_error_42.png" width="15%"/>
 3. `robot_coords_log()`
-   * Coords (no pic)
+   * Coords (no pic):
 4. `write_to_file()`
-   * Messages
+   * Messages:
+     
+     <img src="docs/assets/message.png" width="12%"/>
 5. `task_complete()`
-   * Completed Tasks
+   * Completed Tasks:
+     
+     <img src="docs/assets/auton_incomplete.png" width="15%"/>
 
 ## Function compatibility notes
 1. Every function except for `maelstrom::logging::motor_status()`, `maelstrom::logging::get_current_date_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
