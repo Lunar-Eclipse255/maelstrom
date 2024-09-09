@@ -67,7 +67,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 ## Using maelstrom (core functions)
 1. In `initialize()` in main.cpp call `init()`:
    ```cpp
-      bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
+      init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
    ```
     * 'bool run_error_log' is used if you want to create a file to log errors
     * 'bool run_data_log' is used if you want to create a file to log data such as coordinates
@@ -78,38 +78,23 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
        ```cpp
         std::vector<int> left_motors = {1, -2, 3};
         std::vector<int> right_motors = {-4, 5, -6};
-        bool* temp = maelstrom::logging::init(true, true, left_motors, right_motors, 50);
+        maelstrom::logging::init(true, true, left_motors, right_motors, 50);
         ```
 
-       
-2. To dereference the returned pointer and assign it to a boolean value do this: (note outside of any functions initialize file_created ex. `bool file_created[2];`)
-   ```cpp
-       file_created[0] = temp[0];
-       file_created[1] = temp[1];
-       delete[] temp;
-   ```
-
-   
-3. In different functions you can use the code provided below to check if a file was succesfully created before doing anything to the file, so if the file failed to create the code wouldn't attempt to write to it:
-   ```cpp
-      if (file_created[0]) {}
-   ```
-   * Use `file_created[0]` to check if the error_log file was succesfully created and `file_created[1]` to check if the data_log file was succesfully created
-
   
-4. In `autonomous()` use this code to run the error logger in background
+2. In `autonomous()` use this code to run the error logger in background
    ```cpp
       pros::Task error_logger(maelstrom::logging::robot_faults_log);
    ```
 
 
-5. In `opcontrol()` and before the `while (true)` loop put this line of code that in the background writes to the data log file the current coordinates of the robot:
+3. In `opcontrol()` and before the `while (true)` loop put this line of code that in the background writes to the data log file the current coordinates of the robot:
    ```cpp
       pros::Task coords_logging(maelstrom::logging::robot_coords_log);
    ```
 
 
-6. In `opcontrol()` but inside the `while (true)` loop call this function that updates the coordinates that `maelstrom::logging::robot_coords_log()` uses
+4. In `opcontrol()` but inside the `while (true)` loop call this function that updates the coordinates that `maelstrom::logging::robot_coords_log()` uses
    ```cpp
       void set_robot_coords(double x, double y, double theta);
    ```
@@ -152,8 +137,9 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 1. `init()`:
 * Program Started:
   * Whenever the program starts this will appear as a header in both the error and data logfile
+  * It returns an array of 2 bools. The first bool being if the error logfile was succesfully created and the second bool is if the data logfile was succesfully created. 
 
-    <img src="docs/assets/program_start.png" width="100"/>
+    <img src="docs/assets/program_start.png" height="30"/>
 * PROS Brain Terminal Error Messages:
   * When the program starts there are three error message that could appear in the Brain terminal, "Somethings is wrong with run_nums.txt", where something is wrong with the file, often caused if the SD Card isn't plugged in or thi file doesn't exist. There is also, "Somethings is wrong with error_logfile", which appears when the error logfile couldn't be created. Lastly there is, "Somethings is wrong with data_logfile" where the data logfile couldn't be created. If any of these error happen it will appear in the Brain Terminal and return false to the init function, so undefined behavior doesn't happen from later functions trying to access these files.
     
@@ -162,42 +148,61 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 * Auton Started:
    * When the controller enters autonomous mode this message will display on the error logfile, along with a timestamp in the format `minute:second:millisecond`
   
-     <img src="docs/assets/auton_start.png" width="100"/>
+     <img src="docs/assets/auton_start.png" height="30"/>
+     
 * Driver Started:
    * When the controller enters driver mode (opcontrol) this message will display on the error logfile, along with a timestamp
-
-     <img src="docs/assets/driver_start.png" width="100"/>
-* Over Temp (untested + no pic):
+     
+     <img src="docs/assets/driver_start.png" height="30"/>
+     
+* These next four are motor faults. These faults were all simulated in the code due to most of them coming up rarely. This was done by telling the program that the motors had these faults even though it didn't. All cases were tested with the simulation (0x00-0x0F). So far only Over Temp and No faults has been proven to work in reality. The progress of this can be tracked in Issue #11. Even though they haven't been tested in reality they should work.
+     
+* Over Temp:
    * This error message is written to the error logfile when a motor is overheated, along with the motor that is overheated. An all clear message is sent when the motor is back to a normal temperature. Both messages are accompanied with a timestamp.
-* Driver Fault (H-bridge Fault) (untested + no pic):
+
+     <img src="docs/assets/ot.png" height="30"/>
+     <img src="docs/assets/ot_ac.png" height="30"/>
+     
+* Driver Fault (H-bridge Fault) (Tested in Sim):
    * This error message is written to the error logfile when a motor has a H-Bridge fault, along with which motor has the fault. An all clear message is sent when the motor is back to normal. Both messages are accompanied with a timestamp.
-* Over Current (untested + no pic):
+ 
+     <img src="docs/assets/df.png" height="30"/>
+     <img src="docs/assets/df_ac.png" height="30"/>
+     
+* Over Current (Tested in Sim):
    * This error message is written to the error logfile if a motor is taking too much current, along with which motor that is over current. An all clear message is sent when the motor is back to a normal current. Both messages are accompanied with a timestamp.
-* H-bridge Over Current (untested + no pic):
+ 
+     <img src="docs/assets/oc.png" height="30"/>
+     <img src="docs/assets/oc_ac.png" height="30"/>
+   
+* H-bridge Over Current (Tested in Sim):
    * This error message is written to the error logfile if too much current is flowing through an H-Bridge of a motor, along with which motor that this is affecting. An all clear message is sent when the H-Bridge is back to a normal current. Both messages are accompanied with a timestamp.
+ 
+     <img src="docs/assets/hboc.png" height="30"/>
+     <img src="docs/assets/hboc_ac.png" height="30"/>
 * Motor Disconnect:
    * A message is written to the error logfile when a drive motor (specified in the `init()` function) disconnects, along with the port of the motor. A message is also written when the motor reconnects. This also works for drive motors that were disconnected before the program started. This is accompanied with a timestamp.
   
-     <img src="docs/assets/motor_dc_and_rc.png" width="20%"/>
+     <img src="docs/assets/motor_dc_and_rc.png" height="50"/>
 * Battery Below Threshold:
    * A message is written to the error logfile when the battery is below the threshold specified in the `init()` function. This is accompanied with a timestamp.
   
-     <img src="docs/assets/battery_error_50.png" width="15%"/>
+     <img src="docs/assets/battery_error_50.png" height="30"/>
   
-     <img src="docs/assets/battery_error_42.png" width="15%"/>
+     <img src="docs/assets/battery_error_42.png" height="30"/>
 3. `robot_coords_log()`
 * Coords (no pic):
    * This function writes the current coords of the robot (given by the user) to the data logfile every 0.5s. This is accompanied with a timestamp.
 4. `write_to_file()`
 * Messages:
      * This function writes a message provided by the user to the logfile specified by the user. This is accompanied by a timestamp.
-     <img src="docs/assets/message.png" width="12%"/>
+     <img src="docs/assets/message.png" height="30"/>
 5. `task_complete()`
 * Completed Tasks:
    * This function writes to the error logfile that a task was complete or incomplete, task name, and boolean given by user. This is accompanied by a timestamp.
      
-     <img src="docs/assets/auton_complete.png" width="15%"/>
-     <img src="docs/assets/auton_incomplete.png" width="17%"/>
+     <img src="docs/assets/auton_complete.png" height="30"/>
+     <img src="docs/assets/auton_incomplete.png" height="30"/>
 
 ## Function compatibility notes
 1. Every function except for `maelstrom::logging::motor_connected()`, `maelstrom::logging::get_current_date_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
