@@ -115,6 +115,7 @@ namespace maelstrom {
                 run_num_file << "\n" + run_num;
                 run_num_file.close();
             }
+            pros::delay(500);
             return init_arr.data();
         }
 
