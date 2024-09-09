@@ -191,7 +191,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
   
      <img src="docs/assets/battery_error_42.png" height="30"/>
 3. `robot_coords_log()`
-* Coords (no pic):
+* Coords:
    * This function writes the current coords of the robot (given by the user) to the data logfile every 0.5s. This is accompanied with a timestamp.
  
      <img src="docs/assets/coords.png" width="25%"/>
