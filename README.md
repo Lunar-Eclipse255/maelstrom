@@ -193,6 +193,8 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
 3. `robot_coords_log()`
 * Coords (no pic):
    * This function writes the current coords of the robot (given by the user) to the data logfile every 0.5s. This is accompanied with a timestamp.
+ 
+     <img src="docs/assets/coords.png" width="25%"/>
 4. `write_to_file()`
 * Messages:
      * This function writes a message provided by the user to the logfile specified by the user. This is accompanied by a timestamp.
