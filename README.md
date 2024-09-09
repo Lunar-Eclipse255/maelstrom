@@ -82,7 +82,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
         ```
 
   
-2. In `autonomous()` use this code to run the error logger in background
+2. In `initialize()` use this code to run the error logger in background of autonomous and driver control.
    ```cpp
       pros::Task error_logger(maelstrom::logging::robot_faults_log);
    ```
