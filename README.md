@@ -2,7 +2,7 @@
 <p align="center">
    <img src="docs/assets/maelstrom_circle.png">
 </p>
-<img src="https://img.shields.io/badge/version-v0.5.0-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/version-v0.5.1-blue?style=for-the-badge">
 
 ## Table of Contents
 1. [Intro](#Intro)
