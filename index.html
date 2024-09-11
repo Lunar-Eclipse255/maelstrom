@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+
+<head>
+    <meta name="Home page" content="">
+    <title>maelstrom - Home</title>
+    <link rel="shortcut icon" href="docs/assets/maelstrom_circle.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="main.js"></script>
+</head>
+
+<body>
+
+    <nav>
+        <li><a class="active" href="index.html">Home</a></li>
+        <li class="dropdown">
+            <a href="projects.html" class="dropbtn">Projects</a>
+            <div class="dropdown-content">
+                <a href="https://github.com/Lunar-Eclipse255/maelstrom">SD card logging [Pros]</a>
+            </div>
+        </li>
+        <li><a href="contact.html">Contact</a></li>
+        <li style="float: right;"><a href="about.html">About</a></li>
+    </nav>
+    <p>
+    <img src="https://img.shields.io/badge/version-v0.5.1-blue?style=for-the-badge"></p>
+
+    <h2 id="intro">Intro</h2>
+    <p>maelstrom is a library for <a href="https://pros.cs.purdue.edu/">PROS</a>. Made to access data and information in
+        cases where the robot can&#39;t be connected to a computer and so that data can be accessed at a later time,
+        even when the program is terminated. Developed by Gaston from V5RC Team 6104G Tempest</p>
+    <h2 id="installing-maelstrom-library">Installing maelstrom library</h2>
+    <ol>
+        <li>
+            <p>In the integrated PROS terminal, run the command
+                <code>pros c add-depot maelstrom https://lunar-eclipse255.github.io/maelstrom/template.json</code></p>
+        </li>
+        <li>
+            <p><code>cd</code> into your pros project</p>
+        </li>
+        <li>
+            <p>Make sure you are in the kernel version 4.1.0, your version can be found out with
+                <code>pros c info-project</code> </p>
+        </li>
+        <li>
+            <p>Apply the library to the project with <code>pros c apply maelstrom</code></p>
+        </li>
+        <li>
+            <p>Put <code>#include &quot;maelstrom/api.hpp&quot;</code> in your main.h</p>
+        </li>
+    </ol>
+    <h2 id="alternative-instructions-for-installing-maelstrom-library">Alternative instructions for installing maelstrom
+        library</h2>
+    <ol>
+        <li>
+            <p>To get the library/template, head over to the releases page and download maelstrom@<version>.zip</p>
+        </li>
+        <li>
+            <p>Move the zip file to the pros project</p>
+        </li>
+        <li>
+            <p>Make sure you are in the kernel version 4.1.0, your version can be found out with
+                <code>pros c info-project</code> </p>
+        </li>
+        <li>
+            <p>Run <code>pros c fetch maelstrom@&lt;version&gt;.zip</code> in order to import the template</p>
+        </li>
+        <li>
+            <p>Apply the library to the project with <code>pros c apply maelstrom</code></p>
+        </li>
+        <li>
+            <p>Put <code>#include &quot;maelstrom/api.hpp&quot;</code> in your main.h</p>
+        </li>
+    </ol>
+    <h2 id="set-up">Set-up</h2>
+    <ol>
+        <li>
+            <p>From this Github repository download the folder called logs</p>
+        </li>
+        <li>
+            <p>Put that folder in the root of the SD Card</p>
+        </li>
+    </ol>
+    <h2 id="alternative-set-up">Alternative set-up</h2>
+    <ol>
+        <li>
+            <p>In the root of the SD Card make a folder called logs</p>
+        </li>
+        <li>
+            <p>In the folder logs make a file called run_nums.txt</p>
+        </li>
+        <li>
+            <p>On the first line of run_nums.txt write R0</p>
+        </li>
+    </ol>
+    <h2 id="using-maelstrom-core-functions-">Using maelstrom (core functions)</h2>
+    <ol>
+        <li>In <code>initialize()</code> in main.cpp call <code>init()</code>:
+            <pre><code class="lang-cpp">   init(<span class="hljs-keyword">bool</span> run_error_log, <span class="hljs-keyword">bool</span> run_data_log, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; left_motor_ports, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; right_motor_ports, <span class="hljs-keyword">int</span> battery_threshold);
+</code></pre>
+            <ul>
+                <li>&#39;bool run_error_log&#39; is used if you want to create a file to log errors</li>
+                <li>&#39;bool run_data_log&#39; is used if you want to create a file to log data such as coordinates
+                </li>
+                <li>`std::vector<int> left_motor_ports``` is for inputting the ports of your left motors in the form of
+                        a std::vector</li>
+                <li>`std::vector<int> right_motor_ports`` is for inputting the ports of your right motors in the form of
+                        a std::vector</li>
+                <li><code>int battery_threshold</code> is for inputting at what battery level do you want to be warned
+                    about</li>
+                <li>Here is an example:
+                    <pre><code class="lang-cpp">  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; left_motors = {<span class="hljs-number">1</span>, <span class="hljs-number">-2</span>, <span class="hljs-number">3</span>};
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; right_motors = {<span class="hljs-number">-4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">-6</span>};
+  maelstrom::logging::init(<span class="hljs-literal">true</span>, <span class="hljs-literal">true</span>, left_motors, right_motors, <span class="hljs-number">50</span>);
+</code></pre>
+                </li>
+            </ul>
+        </li>
+    </ol>
+    <ol>
+        <li>In <code>initialize()</code> use this code to run the error logger in background of autonomous and driver
+            control.
+            <pre><code class="lang-cpp">   pros<span class="hljs-type">::</span><span class="hljs-built_in">Task</span> error_logger(maelstrom<span class="hljs-type">::</span>logging<span class="hljs-type">::</span>robot_faults_log);
+</code></pre>
+        </li>
+    </ol>
+    <ol>
+        <li>In <code>opcontrol()</code> and before the <code>while (true)</code> loop put this line of code that in the
+            background writes to the data log file the current coordinates of the robot:
+            <pre><code class="lang-cpp">   pros<span class="hljs-type">::</span><span class="hljs-built_in">Task</span> coords_logging(maelstrom<span class="hljs-type">::</span>logging<span class="hljs-type">::</span>robot_coords_log);
+</code></pre>
+        </li>
+    </ol>
+    <ol>
+        <li>In <code>opcontrol()</code> but inside the <code>while (true)</code> loop call this function that updates
+            the coordinates that <code>maelstrom::logging::robot_coords_log()</code> uses
+            <pre><code class="lang-cpp">   <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">set_robot_coords</span><span class="hljs-params">(<span class="hljs-keyword">double</span> x, <span class="hljs-keyword">double</span> y, <span class="hljs-keyword">double</span> theta)</span></span>;
+</code></pre>
+            <ul>
+                <li>Change double x, double y, and double theta, for variables of the double type that hold those
+                    respective coordinates. For example:
+                    <pre><code class="lang-cpp">   maelstrom::logging::set_robot_coords(x_pos, y_pos, theta_heading);
+</code></pre>
+                </li>
+            </ul>
+        </li>
+    </ol>
+    <h2 id="extra-functions">Extra functions</h2>
+    <ol>
+        <li>In any function you can use
+            <code>maelstrom::logging::write_to_file(std::string message, log_file file);</code> this function can be
+            used to write a message to either the log or error file<ul>
+                <li>The std::string will be the message and the log_file will be used to specify which file to write to,
+                    use <code>E_ERROR_LOG</code> to write to the error log file and <code>E_DATA_LOG</code> to write to
+                    the data log file.</li>
+                <li>This example will write the message Good Luck to the data log file:
+                    <pre><code class="lang-cpp">     maelstrom::logging::write_to_file(<span class="hljs-string">"Good Luck"</span>, maelstrom::logging::E_DATA_LOG);
+</code></pre>
+                </li>
+            </ul>
+        </li>
+        <li>In any function you can use <code>task_complete(std::string task_name, bool completion);</code> to write to
+            the error log file if a task was completed or not<ul>
+                <li>It takes an std::string for the task name and a boolean to see if a task was completed or not</li>
+                <li>ex.)
+                    <pre><code class="lang-cpp">     maelstrom::logging::task_complete(<span class="hljs-string">"Auton"</span>, auton_complete);
+</code></pre>
+                    would write <code>Auton Complete</code> to the error log file if auton_complete was true, and
+                    <code>Auton Incomplete</code> if auton_complete was false
+                </li>
+            </ul>
+        </li>
+        <li>In any function <code>battery(int battery_threshold);</code> can be used to see if the battery percentage is
+            lower than an int threshold. This funtion is used in <code>robot_faults_log()</code> to logto the error log
+            file if the battery is too low but can also be used seperately<ul>
+                <li>In the example below it will return true if the battery percentage is above 50% and returns false if
+                    the battery percentage is less than or equal to 50%
+                    <pre><code class="lang-cpp">    maelstrom::logging::battery(<span class="hljs-number">50</span>);
+</code></pre>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p><code>motor_connected(int port);</code> can be used to get if a motor is disconnected at a port specified
+                by <code>int port</code>. It will return true if the motor is connected and false if the motor is
+                disconnected. This funtion is used in <code>robot_faults_log()</code> to log to the error log file if a
+                drive motor is disconnected but can also be used seperately</p>
+            <ul>
+                <li>The example below checks if the motor at port 20 is connected
+                    <pre><code class="lang-cpp">   maelstrom::logging::motor_connected(<span class="hljs-number">20</span>);
+</code></pre>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p><code>get_current_date_time();</code> returns the time since the program began in a std::string in the
+                format <code>minutes:seconds:milliseconds</code> for example <code>1:50:55</code></p>
+            <pre><code class="lang-cpp">     maelstrom::logging::get_current_date_time();
+</code></pre>
+        </li>
+    </ol>
+    <h2 id="output-and-functionality-of-maelstrom-functions">Output and functionality of maelstrom functions</h2>
+    <ol>
+        <li><code>init()</code>:</li>
+        <li>
+            <p>Program Started:</p>
+            <ul>
+                <li>Whenever the program starts this will appear as a header in both the error and data logfile</li>
+                <li>
+                    <p>It returns an array of 2 bools. The first bool being if the error logfile was succesfully created
+                        and the second bool is if the data logfile was succesfully created. </p>
+                    <p><img src="docs/assets/program_start.png" height="30" /></p>
+                </li>
+            </ul>
+        </li>
+        <li>PROS Brain Terminal Error Messages:<ul>
+                <li>When the program starts there are three error message that could appear in the Brain terminal,
+                    &quot;Somethings is wrong with run_nums.txt&quot;, where something is wrong with the file, often
+                    caused if the SD Card isn&#39;t plugged in or thi file doesn&#39;t exist. There is also,
+                    &quot;Somethings is wrong with error_logfile&quot;, which appears when the error logfile
+                    couldn&#39;t be created. Lastly there is, &quot;Somethings is wrong with data_logfile&quot; where
+                    the data logfile couldn&#39;t be created. If any of these error happen it will appear in the Brain
+                    Terminal and return false to the init function, so undefined behavior doesn&#39;t happen from later
+                    functions trying to access these files.</li>
+            </ul>
+        </li>
+    </ol>
+    <ol>
+        <li><code>robot_faults_log()</code>:</li>
+        <li>
+            <p>Auton Started:</p>
+            <ul>
+                <li>
+                    <p>When the controller enters autonomous mode this message will display on the error logfile, along
+                        with a timestamp in the format <code>minute:second:millisecond</code></p>
+                    <p><img src="docs/assets/auton_start.png" height="30" /></p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>Driver Started:</p>
+            <ul>
+                <li>
+                    <p>When the controller enters driver mode (opcontrol) this message will display on the error
+                        logfile, along with a timestamp</p>
+                    <p><img src="docs/assets/driver_start.png" height="30" /></p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>These next four are motor faults. These faults were all simulated in the code due to most of them coming
+                up rarely. This was done by telling the program that the motors had these faults even though it
+                didn&#39;t. All cases were tested with the simulation (0x00-0x0F). So far only Over Temp and No faults
+                has been proven to work in reality. The progress of this can be tracked in Issue #11. Even though they
+                haven&#39;t been tested in reality they should work.</p>
+        </li>
+        <li>
+            <p>Over Temp:</p>
+            <ul>
+                <li>
+                    <p>This error message is written to the error logfile when a motor is overheated, along with the
+                        motor that is overheated. An all clear message is sent when the motor is back to a normal
+                        temperature. Both messages are accompanied with a timestamp.</p>
+                    <p><img src="docs/assets/ot.png" height="30" />
+                        <img src="docs/assets/ot_ac.png" height="30" />
+                    </p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>Driver Fault (H-bridge Fault) (Tested in Sim):</p>
+            <ul>
+                <li>
+                    <p>This error message is written to the error logfile when a motor has a H-Bridge fault, along with
+                        which motor has the fault. An all clear message is sent when the motor is back to normal. Both
+                        messages are accompanied with a timestamp.</p>
+                    <p><img src="docs/assets/df.png" height="30" />
+                        <img src="docs/assets/df_ac.png" height="30" />
+                    </p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>Over Current (Tested in Sim):</p>
+            <ul>
+                <li>
+                    <p>This error message is written to the error logfile if a motor is taking too much current, along
+                        with which motor that is over current. An all clear message is sent when the motor is back to a
+                        normal current. Both messages are accompanied with a timestamp.</p>
+                    <p><img src="docs/assets/oc.png" height="30" />
+                        <img src="docs/assets/oc_ac.png" height="30" />
+                    </p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>H-bridge Over Current (Tested in Sim):</p>
+            <ul>
+                <li>
+                    <p>This error message is written to the error logfile if too much current is flowing through an
+                        H-Bridge of a motor, along with which motor that this is affecting. An all clear message is sent
+                        when the H-Bridge is back to a normal current. Both messages are accompanied with a timestamp.
+                    </p>
+                    <p><img src="docs/assets/hboc.png" height="30" />
+                        <img src="docs/assets/hboc_ac.png" height="30" />
+                    </p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>Motor Disconnect:</p>
+            <ul>
+                <li>
+                    <p>A message is written to the error logfile when a drive motor (specified in the
+                        <code>init()</code> function) disconnects, along with the port of the motor. A message is also
+                        written when the motor reconnects. This also works for drive motors that were disconnected
+                        before the program started. This is accompanied with a timestamp.</p>
+                    <p><img src="docs/assets/motor_dc_and_rc.png" height="50" /></p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>Battery Below Threshold:</p>
+            <ul>
+                <li>
+                    <p>A message is written to the error logfile when the battery is below the threshold specified in
+                        the <code>init()</code> function. This is accompanied with a timestamp.</p>
+                    <p><img src="docs/assets/battery_error_50.png" height="30" /></p>
+                    <p><img src="docs/assets/battery_error_42.png" height="30" /></p>
+                </li>
+            </ul>
+        </li>
+        <li><code>robot_coords_log()</code></li>
+        <li>
+            <p>Coords:</p>
+            <ul>
+                <li>
+                    <p>This function writes the current coords of the robot (given by the user) to the data logfile
+                        every 0.5s. This is accompanied with a timestamp.</p>
+                    <p><img src="docs/assets/coords.png" width="25%" /></p>
+                </li>
+            </ul>
+        </li>
+        <li><code>write_to_file()</code></li>
+        <li>Messages:<ul>
+                <li>This function writes a message provided by the user to the logfile specified by the user. This is
+                    accompanied by a timestamp.
+                    <img src="docs/assets/message.png" height="30" />
+                </li>
+            </ul>
+        </li>
+        <li><code>task_complete()</code></li>
+        <li>
+            <p>Completed Tasks:</p>
+            <ul>
+                <li>
+                    <p>This function writes to the error logfile that a task was complete or incomplete, task name, and
+                        boolean given by user. This is accompanied by a timestamp.</p>
+                    <p><img src="docs/assets/auton_complete.png" height="30" />
+                        <img src="docs/assets/auton_incomplete.png" height="30" />
+                    </p>
+                </li>
+            </ul>
+        </li>
+    </ol>
+    <h2 id="function-compatibility-notes">Function compatibility notes</h2>
+    <ol>
+        <li>
+            <p>Every function except for <code>maelstrom::logging::motor_connected()</code>,
+                <code>maelstrom::logging::get_current_date_time()</code>, <code>maelstrom::logging::battery()</code>,
+                and <code>maelstrom::logging::set_robot_coords()</code> needs the function
+                <code>maelstrom::logging::init()</code> to have been called</p>
+        </li>
+        <li>
+            <p><code>maelstrom::logging::robot_coords_log()</code> needs
+                <code>maelstrom::logging::set_robot_coords()</code> to update the coordinates or
+                <code>maelstrom::logging::robot_coords_log()</code> will always log the coordinates as NaN</p>
+        </li>
+    </ol>
+    <h2 id="license">License</h2>
+    <ul>
+        <li>MIT License</li>
+    </ul>
+    <h2 id="contact">Contact</h2>
+    <p>You can contact me through Discord if any issues arise, I am Gaston | 6104G on many VEX Discord Servers.</p>
+    <p>
+    <p></p>
+    <img src="docs/assets/Tempest_Logo.PNG" width="100" /></p>
+
+    <footer>Copyright © 2024 maelstrom</footer>
+
+</body>
+
+</html>
