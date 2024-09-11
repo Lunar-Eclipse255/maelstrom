@@ -1,0 +1,84 @@
+html {
+    background-color: black;
+    color: white;
+    font-family: 'Segoe UI', Tahoma;
+    scroll-behavior: smooth;
+    padding-bottom: 2%;
+}
+
+nav {
+    list-style: none;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #38444d;
+}
+
+nav li {
+    float: left;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #38444d;
+    backdrop-filter: 8;
+    color: white;
+    text-align: center;
+}
+
+nav li a,
+.dropbtn {
+    display: inline-block;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    border-right: 1px solid #bbb;
+}
+
+.active {
+    background-color: rgb(170, 96, 36);
+}
+
+li a:hover:not(.active) {
+    background-color: lightslategray;
+}
+
+nav li.dropdown {
+    display: inline-block;
+}
+
+nav li:last-child a {
+    border-left: 1px solid #bbb;
+    border-right: none;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 160px;
+    padding: 8px 0px;
+    background-color: lightslategrey;
+    border-radius: 8px;
+}
+
+.dropdown-content a {
+    background-color: lightslategrey;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    border: none;
+    /* Remove borders */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    position: absolute;
+    padding: 8px 0px;
+    background-color: lightslategrey;
+    border-radius: 8px;
+}
