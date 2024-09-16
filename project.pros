@@ -255,7 +255,11 @@
       }
     },
     "upload_options": {
+<<<<<<< HEAD
       "slot": 4,
+=======
+      "slot": 5,
+>>>>>>> rtf_color_messages
       "after": "run"
     },
     "use_early_access": false
