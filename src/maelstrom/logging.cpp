@@ -350,19 +350,23 @@ namespace maelstrom {
                 while (true) {
                     //locks the mutex to prevent concurrent access to coordinates
                     coords_mutex.take(TIMEOUT_MAX);
+                    // Copy coordinates under mutex protection
+                    double x = robot_coords_vector.at(0);
+                    double y = robot_coords_vector.at(1);
+                    double theta = robot_coords_vector.at(2);
+                    coords_mutex.give();
+                    
                     // Only log if coordinates have been set (not NaN)
-                    if (!std::isnan(robot_coords_vector.at(0))) {
+                    if (!std::isnan(x)) {
                         //declares a file stream object to read and write to
                         std::fstream data_log_file;
                         //opens the data logfile to append to
                         data_log_file.open(data_log_filename, std::ios::app);
                         //writes x,y,theta, and timestamp to data logfile
-                        data_log_file.seekp((long) data_log_file.tellp() - 1) << "x: " + format_coords(robot_coords_vector.at(0)) + " y: " + format_coords(robot_coords_vector.at(1)) + " theta: " + format_coords(robot_coords_vector.at(2)) + " " + get_current_time() + "\\line }";
+                        data_log_file.seekp((long) data_log_file.tellp() - 1) << "x: " + format_coords(x) + " y: " + format_coords(y) + " theta: " + format_coords(theta) + " " + get_current_time() + "\\line }";
                         //closes data logfile
                         data_log_file.close();
                     }
-                    //releases mutex
-                    coords_mutex.give();
                     // 0.5 second delay for robot to move
                     pros::delay(500);
                 }
