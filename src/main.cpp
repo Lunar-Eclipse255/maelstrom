@@ -31,10 +31,6 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	// pros::lcd::initialize();
-	// pros::lcd::set_text(1, "Hello PROS User!");
-	// pros::lcd::register_btn1_cb(on_center_button);
-	// Temporarily disable logging to test upload
 	maelstrom::logging::init(true, true, left_motors, right_motors, 50);
 	// file_created[0] = temp[0];
     // file_created[1] = temp[1];
@@ -72,7 +68,6 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	// Temporarily disable logging
 	maelstrom::logging::write_to_file("Good Luck", maelstrom::logging::E_DATA_LOG);
 }
 
@@ -90,7 +85,6 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// Temporarily disable logging
     maelstrom::logging::task_complete("Auton", auton_complete);
 	double x_pos = 0;
 	double y_pos = 0;
@@ -98,12 +92,12 @@ void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	pros::MotorGroup left_mg({left_motors.begin(), left_motors.end()}); // Creates a motor group with forwards ports 1 & 3 and reversed port 2
 	pros::MotorGroup right_mg({right_motors.begin(), right_motors.end()});  // Creates a motor group with forwards port 5 and reversed ports 4 & 6
-	// pros::Task coords_logging(maelstrom::logging::robot_coords_log);
+	pros::Task coords_logging(maelstrom::logging::robot_coords_log);
 	while (true) {
 		x_pos = 0;
 		y_pos = 0;
 		theta_heading = 0;
-		// maelstrom::logging::set_robot_coords(x_pos, y_pos, theta_heading);
+		maelstrom::logging::set_robot_coords(x_pos, y_pos, theta_heading);
 		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
 		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);  // Prints status of the emulated screen LCDs

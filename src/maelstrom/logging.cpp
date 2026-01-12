@@ -342,51 +342,82 @@ namespace maelstrom {
             coords_mutex.give();
         }
 
+        //declares function to log robot coordinates
         void robot_coords_log() {
+            //checks if data logfile was created
             if (init_arr[1]) {
+                //while true loop to always update coords
                 while (true) {
+                    //locks the mutex to prevent concurrent access to coordinates
                     coords_mutex.take(TIMEOUT_MAX);
-                    if (!robot_coords_vector.empty()) {
+                    // Only log if coordinates have been set (not NaN)
+                    if (!std::isnan(robot_coords_vector.at(0))) {
+                        //declares a file stream object to read and write to
                         std::fstream data_log_file;
+                        //opens the data logfile to append to
                         data_log_file.open(data_log_filename, std::ios::app);
+                        //writes x,y,theta, and timestamp to data logfile
                         data_log_file.seekp((long) data_log_file.tellp() - 1) << "x: " + format_coords(robot_coords_vector.at(0)) + " y: " + format_coords(robot_coords_vector.at(1)) + " theta: " + format_coords(robot_coords_vector.at(2)) + " " + get_current_time() + "\\line }";
+                        //closes data logfile
                         data_log_file.close();
                     }
+                    //releases mutex
                     coords_mutex.give();
+                    // 0.5 second delay for robot to move
                     pros::delay(500);
                 }
             }
         }
 
+        //declares funtion to write to a file
         void write_to_file(std::string message, log_file file) {
+            //checks if user wants to write to error logfile
             if (file == E_ERROR_LOG){
+                //checks if error logfile was created
                 if (init_arr[0]) {
+                    //declares a file stream object to read and write to
                     std::fstream error_log_file;
+                    //opens the error logfile to append to
                     error_log_file.open(error_log_filename, std::ios::app);
+                    //writes message and timestamp to error logfile
                     error_log_file.seekp((long) error_log_file.tellp() - 1) << message + " " + get_current_time() + "\\line }";
+                    //closes error logfile
                     error_log_file.close();
                 }
             }
             else{
+                //checks if data logfile was created
                 if (init_arr[1]) {
+                    //declares a file stream object to read and write to
                     std::fstream data_log_file;
+                    //opens the data logfile to append to
                     data_log_file.open(data_log_filename, std::ios::app);
+                    //writes message and timestamp to data logfile
                     data_log_file.seekp((long) data_log_file.tellp() - 1) << message + " " + get_current_time() + "\\line }";
+                    //closes data logfile
                     data_log_file.close();
                 }
             }
         }
 
+        //declares function to log if a task was completed
         void task_complete(std::string task_name, bool completion) {
+            //checks if error logfile was created
             if (init_arr[0]) {
+                //declares a file stream object to read and write to
                 std::fstream error_log_file;
+                //opens the data logfile to append to
                 error_log_file.open(error_log_filename, std::ios::app);
                 if (completion){
+                    //if task was completed appends to error logfile that "task_name" was completed
                     error_log_file.seekp((long) error_log_file.tellp() - 1) << "\\cf2 " + task_name + " Complete \\cf0 " + get_current_time() + "\\line }";
                 }
                 else{
+                    //if task was not completed appends to error logfile that "task_name" was not completed
                     error_log_file.seekp((long) error_log_file.tellp() - 1) << "\\cf4 " + task_name + " Incomplete \\cf0 " + get_current_time() + "\\line }";
                 }
+                //closes error logfile
+                error_log_file.close();
             }
         }
     }
