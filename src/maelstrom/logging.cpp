@@ -219,10 +219,10 @@ namespace maelstrom {
 
         //declares a function that returns if a motor is connected
         bool motor_connected(int port) {
-            //stores the motor temperature to an int temperature
-            int temperature = pros::c::motor_get_current_draw(port);
-            //if the temperature is PROS_ERR (ie the motor DC'd) return false else return true
-            return !(temperature == PROS_ERR);
+            //stores the motor current draw to check connection status
+            int current_draw = pros::c::motor_get_current_draw(port);
+            //if current_draw is PROS_ERR (i.e., the motor DC'd) return false, else return true
+            return !(current_draw == PROS_ERR);
         }
 
         //declares a function that returns if the battery percent is above the threshold
