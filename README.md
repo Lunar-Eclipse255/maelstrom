@@ -2,7 +2,7 @@
 <p align="center">
    <img src="docs/assets/maelstrom_circle.png">
 </p>
-<img src="https://img.shields.io/badge/version-v0.5.1-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/version-v0.6.0-blue?style=for-the-badge" alt="Version v0.6.0">
 
 ## Table of Contents
 1. [Intro](#Intro)
@@ -128,9 +128,9 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
         maelstrom::logging::motor_connected(20);
      ```
 
-5. `get_current_date_time();` returns the time since the program began in a std::string in the format `minutes:seconds:milliseconds` for example `1:50:55`
+5. `get_current_time();` returns the time since the program began in a std::string in the format `minutes:seconds:milliseconds` for example `1:50:55`
      ```cpp
-        maelstrom::logging::get_current_date_time();
+        maelstrom::logging::get_current_time();
      ```
 
 ## Output and functionality of maelstrom functions
@@ -207,7 +207,7 @@ maelstrom is a library for [PROS](https://pros.cs.purdue.edu/). Made to access d
      <img src="docs/assets/auton_incomplete.png" height="30"/>
 
 ## Function compatibility notes
-1. Every function except for `maelstrom::logging::motor_connected()`, `maelstrom::logging::get_current_date_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
+1. Every function except for `maelstrom::logging::motor_connected()`, `maelstrom::logging::get_current_time()`, `maelstrom::logging::battery()`, and `maelstrom::logging::set_robot_coords()` needs the function `maelstrom::logging::init()` to have been called
 
 2. `maelstrom::logging::robot_coords_log()` needs `maelstrom::logging::set_robot_coords()` to update the coordinates or `maelstrom::logging::robot_coords_log()` will always log the coordinates as NaN
 

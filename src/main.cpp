@@ -31,13 +31,10 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	// pros::lcd::initialize();
-	// pros::lcd::set_text(1, "Hello PROS User!");
-	// pros::lcd::register_btn1_cb(on_center_button);
 	maelstrom::logging::init(true, true, left_motors, right_motors, 50);
 	// file_created[0] = temp[0];
     // file_created[1] = temp[1];
-    // delete[] temp; 
+    // delete[] temp;
     pros::Task error_logger(maelstrom::logging::robot_faults_log);
 }
 
@@ -71,9 +68,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-
 	maelstrom::logging::write_to_file("Good Luck", maelstrom::logging::E_DATA_LOG);
-
 }
 
 /**

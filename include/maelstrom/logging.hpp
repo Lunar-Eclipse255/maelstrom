@@ -27,7 +27,7 @@ namespace maelstrom {
         extern std::vector<std::vector<bool>> faults;
         bool* init(bool run_error_log, bool run_data_log, std::vector<int> left_motor_ports, std::vector<int> right_motor_ports, int battery_threshold);
         bool battery(int battery_threshold);
-        std::string get_current_date_time();
+        std::string get_current_time();
         void robot_faults_log();
         bool motor_connected(int port);
         void motor_fault_log (int port_index, uint32_t motor_fault);
